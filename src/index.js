@@ -11,9 +11,7 @@ import GlobalStyles from "./theme/globalStyles";
 import { Routes } from "react-router-dom";
 
 function App() {
-  return (
-    // <div>hello</div>
-    
+  return (    
     <ThemeConfig>
       <GlobalStyles />
       <Router>

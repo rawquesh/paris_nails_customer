@@ -1,7 +1,11 @@
-import React from 'react'
+import React from "react";
+import "./style.css"
 
 export default function Home() {
   return (
-    <div>hello</div>
-  )
+    <div>
+      <div className="big-image">
+      </div>
+    </div>
+  );
 }
