@@ -1,14 +1,17 @@
 import React from "react";
 import Header from "./header";
-import "./style.css"
+import "./style.css";
 
 export default function Home() {
   return (
     <div>
       <div className="big-image">
-        <Header/>
-
+        <Header />
       </div>
+      
+
+
+
     </div>
   );
 }

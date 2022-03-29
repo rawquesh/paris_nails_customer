@@ -1,5 +1,5 @@
 .big-image {
-  height: 550px;
+  height: 650px;
   background-position: top center;
   background-image: url("https://cdn.discordapp.com/attachments/891933566571798548/958033873420296242/Bella-Nails-and-Spa-Nail-salon-in-Flemington-NJ-08822-No-5.png");
 }
@@ -14,19 +14,28 @@
 }
 
 .mainlabel {
-  max-width:  500px;
+  max-width: 500px;
   text-align: center;
-  margin:auto;
-  padding:12px 10px;
+  margin: auto;
+  padding: 12px 10px;
   top: 60%;
   border-radius: 10px;
   position: relative;
   background-color: white;
 }
 
+
 @media only screen and (max-width: 650px) {
   .logo {
     height: 50px;
+  }
+  .big-image {
+    height: 550px;
+  }
+
+  .mainlabel {
+    /* margin: 10px; */
+    width: 360px;
   }
 
   .header_text {

@@ -37,16 +37,15 @@ function MainLabel({ click }) {
     <div className="mainlabel">
       <Typography
         style={{
-          color: "black",
           marginBottom: "20px",
           textTransform: "uppercase",
-          fontSize: "15px",
-          letterSpacing: "2px",
+          fontSize: "13px",
+          letterSpacing: "1px",
         }}
       >
         Book our services at best prices.
       </Typography>
-      <Button sx={{}} variant="contained" onClick={click}>
+      <Button sx={{fontSize : "14px"}} variant="contained" onClick={click}>
         Book Now
       </Button>
     </div>
