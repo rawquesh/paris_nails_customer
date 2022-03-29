@@ -29,9 +29,9 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#4782DA',
-  light: '#4782DA',
-  main: '#4782DA',
+  lighter: '#d92a7c',
+  light: '#d92a7c',
+  main: '#d92a7c',
 };
 const SECONDARY = {
   lighter: '#D6E4FF',
