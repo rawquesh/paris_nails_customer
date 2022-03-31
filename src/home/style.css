@@ -22,7 +22,7 @@
   text-align: center;
 }
 .header-1-item {
-  max-width: 25em;
+  width: 25em;
   position: relative;
   margin: 25px;
   margin-bottom: 30px;
@@ -99,7 +99,7 @@
 
   .mainlabel {
     /* margin: 10px; */
-    width: 360px;
+    max-width: 360px;
   }
 
   .header_text {

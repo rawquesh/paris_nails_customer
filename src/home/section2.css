@@ -13,7 +13,7 @@
 
 .main-item {
   width: 50%;
-  min-width: 400px;
+  /* min-width: 400px; */
   flex-grow: 1;
 }
 .main-item-1 {

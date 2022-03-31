@@ -11,18 +11,7 @@ export default function Home() {
         <Header />
       </div>
       <div className="header-1">
-        <div className="header-1-item ">
-          <img
-            height="450px"
-            style={{
-              position: "absolute",
-              // bottom: "60px",
-              // left: "80px",
-            }}
-            src="images/home-1.png"
-          />
-          <img height="480px" src="images/home-2.png" />
-        </div>
+        <img className="header-1-item" src="images/home-1.png" />
         <div className="header-1-item">
           <div className="">
             <h2 class="heading-decorate">
