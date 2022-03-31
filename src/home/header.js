@@ -15,18 +15,21 @@ export default function Header() {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar elevation={0} sx={{ bgcolor: "white", padding: "5px 0px" }}>
-          <Toolbar variant="regular">
-            <img alt="Logo" className="logo" src="images/logo.png" />
-            <Box sx={{ flexGrow: 1 }} />
-            <MyButton2 title="Services" onClick={onClick} />
-            <MyButton2 className="toggle" title="About Us" onClick={onClick} />
-            <MyButton2 title="Contact Us" onClick={onClick} />
-            <MyButton title="Login" onClick={onClick} />
-          </Toolbar>
-        </AppBar>
-      </Box>
+      <div
+        style={{ width: "100%", height: "45px", backgroundColor: "#d92a7c" }}
+      ></div>
+
+      <Toolbar
+        style={{ backgroundColor: "white", margin: "0px", padding: "15px" }}
+        variant="regular"
+      >
+        <img alt="Logo" className="logo" src="images/logo.png" />
+        <Box sx={{ flexGrow: 1 }} />
+        <MyButton2 title="Services" onClick={onClick} />
+        <MyButton2 className="toggle" title="About Us" onClick={onClick} />
+        <MyButton2 title="Contact Us" onClick={onClick} />
+        <MyButton title="Login" onClick={onClick} />
+      </Toolbar>
       <MainLabel click={() => {}} />
     </>
   );
@@ -45,7 +48,7 @@ function MainLabel({ click }) {
       >
         Book our services at best prices.
       </Typography>
-      <Button sx={{fontSize : "14px"}} variant="contained" onClick={click}>
+      <Button sx={{ fontSize: "14px" }} variant="contained" onClick={click}>
         Book Now
       </Button>
     </div>
