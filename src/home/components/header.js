@@ -17,18 +17,18 @@ export default function Header() {
   return (
     <>
       <div className="top-header"></div>
-      <div className="main-header">
-        <img
-          alt="Logo"
-          className="header-item header-item-1"
-          src="images/logo.png"
-        />
-        <div className="header-item header-item-2">
-          <MyButton2 title="Services" onClick={onClick} />
-          {/* <MyButton2 className="toggle" title="About Us" onClick={onClick} /> */}
-          <MyButton2 title="Contact Us" onClick={onClick} />
-          <MyButton title="Login" onClick={onClick} />
-        </div>
+        <div className="main-header">
+          <img
+            alt="Logo"
+            className="header-item header-item-1"
+            src="images/logo.png"
+          />
+          <div className="header-item header-item-2">
+            <MyButton2 title="Services" onClick={onClick} />
+            {/* <MyButton2 className="toggle" title="About Us" onClick={onClick} /> */}
+            <MyButton2 title="Contact Us" onClick={onClick} />
+            <MyButton title="Login" onClick={onClick} />
+          </div>
       </div>
       <MainLabel click={() => {}} />
     </>
@@ -48,7 +48,7 @@ function MainLabel({ click }) {
       >
         Book our services at best prices.
       </Typography>
-      <Button sx={{ fontSize: "14px" }} variant="contained" onClick={click}>
+      <Button sx={{ fontSize: "14px",color : "#d92a7c",padding  : "8px 30px",borderRadius : "100px"  }} variant="contained" onClick={click}>
         Book Now
       </Button>
     </div>
