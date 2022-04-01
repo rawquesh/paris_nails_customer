@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
-import Header from "./header";
 import "./style.css";
 import "./section2.css";
+import Header from "./components/header";
 
 export default function Home() {
   return (
@@ -37,7 +37,15 @@ export default function Home() {
       <div className="main">
         <div className="main-item main-item-1">
           {ServicesItems.map((e) => (
-            <div className="service-item">hello</div>
+            <div className="service-item">
+              <div style={{maxWidth : "300px"}} >
+                <div className="svg">
+                  <img src={e.icon} />
+                </div>
+                <h3>{e.title}</h3>
+                <p>{e.desc}</p>
+              </div>
+            </div>
           ))}
         </div>
         <div className="main-item main-item-2"></div>

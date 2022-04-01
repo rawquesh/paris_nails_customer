@@ -2,7 +2,8 @@ import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { bgcolor } from "@mui/system";
 import React, { useRef, useResize } from "react";
 // import {  } from "react-router";
-import "./style.css";
+
+import "./header.css";
 
 export default function Header() {
   //   const componentRef = useRef();
@@ -15,21 +16,20 @@ export default function Header() {
 
   return (
     <>
-      <div
-        style={{ width: "100%", height: "45px", backgroundColor: "#d92a7c" }}
-      ></div>
-
-      <Toolbar
-        style={{ backgroundColor: "white", margin: "0px", padding: "15px" }}
-        variant="regular"
-      >
-        <img alt="Logo" className="logo" src="images/logo.png" />
-        <Box sx={{ flexGrow: 1 }} />
-        <MyButton2 title="Services" onClick={onClick} />
-        <MyButton2 className="toggle" title="About Us" onClick={onClick} />
-        <MyButton2 title="Contact Us" onClick={onClick} />
-        <MyButton title="Login" onClick={onClick} />
-      </Toolbar>
+      <div className="top-header"></div>
+      <div className="main-header">
+        <img
+          alt="Logo"
+          className="header-item header-item-1"
+          src="images/logo.png"
+        />
+        <div className="header-item header-item-2">
+          <MyButton2 title="Services" onClick={onClick} />
+          {/* <MyButton2 className="toggle" title="About Us" onClick={onClick} /> */}
+          <MyButton2 title="Contact Us" onClick={onClick} />
+          <MyButton title="Login" onClick={onClick} />
+        </div>
+      </div>
       <MainLabel click={() => {}} />
     </>
   );
