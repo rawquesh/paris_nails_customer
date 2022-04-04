@@ -1,7 +1,5 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import { bgcolor } from "@mui/system";
-import React, { useRef, useResize } from "react";
-// import {  } from "react-router";
+import { Button,  Typography } from "@mui/material";
+import React from "react";
 
 import "./header.css";
 
@@ -67,7 +65,7 @@ function MyButton2({ title, onClick, className }) {
       }}
     >
       <Typography className="header_text" color="black">
-        {title}
+        { title}
       </Typography>
     </Button>
   );
