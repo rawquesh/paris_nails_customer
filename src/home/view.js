@@ -4,6 +4,7 @@ import Header from "./components/header";
 import Section2 from "./components/section2";
 import Members from "./components/members";
 import Section1 from "./components/section1";
+import Prices from "./components/prices";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Section1 />
       <Section2 />
       <Members />
+      <Prices />
     </>
   );
 }

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+
 .header-1 {
   max-width: 60em;
   display: flex;
@@ -28,8 +31,8 @@
 .header-1-item p:first-of-type {
   margin-top: 20px;
   font-size: 18px;
-  line-height: 1.55556;
-  color: #151515;
+  /* line-height: 1.55556; */
+  color: #4d4d4d;
 }
 
 
@@ -58,4 +61,11 @@
   background-color: #ffd8cb;
   margin: auto;
   box-sizing: border-box;
+}
+
+
+@media only screen and (max-width: 1000px) {
+  .header-1-item h2{
+    font-size: 35px;
+  }
 }

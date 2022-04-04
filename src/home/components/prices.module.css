@@ -1,8 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
-
-
-.main {
-  /* padding: 10px; */
+.container {
   max-width: 1200px;
   margin: auto;
   padding-top: 55px;
@@ -25,8 +21,7 @@
   width: 50px;
 }
 
-.headline,
-.members h4 {
+.headline {
   font-size: 43px;
   font-weight: 400;
   color: #151515;
@@ -34,26 +29,7 @@
   letter-spacing: 0.5px;
 }
 
-.members {
-  max-width: 380px;
-  margin: 10px;
-  /* margin-bottom: 10px; */
-  padding: 25px;
-  border: 3px solid #f4f4f4;
-  transition: all 0.3s;
-}
-.members:hover {
-  box-shadow: 0 0 22px rgb(0 0 0 / 10%);
-}
-
-.members h4 {
-  font-size: 23px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-.desc,
-.members p {
+.desc {
   max-width: 80%;
   margin: auto;
   font-family: "Montserrat", sans-serif;
@@ -71,12 +47,40 @@
   margin-bottom: 30px;
 }
 
-.members p:last-of-type {
-  color: #686868;
+.services {
+  column-count: 2;
+  column-gap: 30px;
+  width: 100%;
+}
+.service {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  padding: 25px 20px 25px 0;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.service h4,
+p,
+span {
+  font-family: "Montserrat", sans-serif;
+}
+.service p {
+  color: #9b9b9b;
 }
 
 @media only screen and (max-width: 1000px) {
   .headline {
     font-size: 30px;
+  }
+  .services {
+    column-count: 1;
+    width: 90%;
+  }
+  .service h4,
+  p,
+  span {
+    font-size: 15px;
   }
 }

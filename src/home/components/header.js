@@ -1,4 +1,4 @@
-import { Button,  Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import React from "react";
 
 import "./header.css";
@@ -15,18 +15,18 @@ export default function Header() {
   return (
     <>
       <div className="top-header"></div>
-        <div className="main-header">
-          <img
-            alt="Logo"
-            className="header-item header-item-1"
-            src="images/logo.png"
-          />
-          <div className="header-item header-item-2">
-            <MyButton2 title="Services" onClick={onClick} />
-            {/* <MyButton2 className="toggle" title="About Us" onClick={onClick} /> */}
-            <MyButton2 title="Contact Us" onClick={onClick} />
-            <MyButton title="Login" onClick={onClick} />
-          </div>
+      <div className="main-header">
+        <img
+          alt="Logo"
+          className="header-item header-item-1"
+          src="images/logo.png"
+        />
+        <div className="header-item header-item-2">
+          <MyButton2 title="Services" onClick={onClick} />
+          {/* <MyButton2 className="toggle" title="About Us" onClick={onClick} /> */}
+          <MyButton2 title="Contact Us" onClick={onClick} />
+          <MyButton title="Login" onClick={onClick} />
+        </div>
       </div>
       <MainLabel click={() => {}} />
     </>
@@ -39,14 +39,25 @@ function MainLabel({ click }) {
       <Typography
         style={{
           marginBottom: "20px",
-          textTransform: "uppercase",
-          fontSize: "13px",
-          letterSpacing: "1px",
+          // textTransform: "uppercase",
+          fontSize: "17px",
+          letterSpacing: ".5px",
+          fontFamily: "Montserrat, sans-serif",
         }}
       >
         Book our services at best prices.
       </Typography>
-      <Button sx={{ fontSize: "14px",color : "#d92a7c",padding  : "8px 30px",borderRadius : "100px"  }} variant="contained" onClick={click}>
+      <Button
+        sx={{
+          fontSize: "14px",
+          color: "black",
+          padding: "8px 30px",
+          borderRadius: "100px",
+          fontFamily: "Montserrat, sans-serif",
+        }}
+        variant="outlined"
+        onClick={click}
+      >
         Book Now
       </Button>
     </div>
@@ -60,12 +71,11 @@ function MyButton2({ title, onClick, className }) {
       className={className + " top_buttons"}
       style={{
         margin: "5px 5px 0",
-        // padding : "0px",
         borderRadius: "3px",
       }}
     >
-      <Typography className="header_text" color="black">
-        { title}
+      <Typography fontFamily="Montserrat, sans-serif" className="header_text" color="black">
+        {title}
       </Typography>
     </Button>
   );
@@ -81,7 +91,7 @@ function MyButton({ title, onClick }) {
         borderRadius: "100px",
       }}
     >
-      <Typography className="header_text" color="black">
+      <Typography fontFamily="Montserrat, sans-serif"  className="header_text" color="black">
         {title}
       </Typography>
     </Button>
