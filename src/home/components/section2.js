@@ -1,5 +1,5 @@
 import React from "react";
-import "./section2.css";
+import "./css/section2.css";
 
 export default function Section2() {
   return (
@@ -17,7 +17,12 @@ export default function Section2() {
           </div>
         ))}
       </div>
-      <div className="main-item main-item-2"></div>
+      <div
+        className="main-item main-item-2"
+        style={{
+          backgroundImage: "url(./images/home-4.jpg)",
+        }}
+      ></div>
     </div>
   );
 }

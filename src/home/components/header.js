@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import React from "react";
 
-import "./header.css";
+import "./css/header.css";
 
 export default function Header() {
   //   const componentRef = useRef();

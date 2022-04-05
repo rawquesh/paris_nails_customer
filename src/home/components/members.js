@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import styles from "./members.module.css";
+import styles from "./css/members.module.css";
 
 export default function Members() {
   return (

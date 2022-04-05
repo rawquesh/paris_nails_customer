@@ -27,7 +27,6 @@
   align-items: stretch;
 }
 .main-item-2 {
-  background: url("../../../public/images/home-4.jpg");
   background-size: cover;
   height: 600px;
 }

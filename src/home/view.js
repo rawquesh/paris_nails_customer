@@ -16,6 +16,7 @@ export default function Home() {
       <Section2 />
       <Members />
       <Prices />
+      {/* <Contact /> */}
     </>
   );
 }

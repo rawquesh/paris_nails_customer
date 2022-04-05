@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import styles from "./prices.module.css";
+import styles from "./css/prices.module.css";
 
 export default function Prices() {
   return (
