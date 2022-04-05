@@ -70,6 +70,18 @@ span {
   color: #9b9b9b;
 }
 
+.button{
+  border-radius: 100px;
+  padding: 10px 40px;
+  margin: 60px auto;
+  margin-bottom: 80px;
+  font-size: 15px;
+  letter-spacing: .4px;
+  font-family: "Montserrat", sans-serif;
+
+  text-transform: uppercase;
+}
+
 @media only screen and (max-width: 1000px) {
   .headline {
     font-size: 30px;

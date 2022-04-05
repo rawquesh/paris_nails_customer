@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import React from "react";
 import styles from "./css/prices.module.css";
 
@@ -33,6 +33,11 @@ export default function Prices() {
           </div>
         ))}
       </div>
+
+      {/* <Grid item  > */}
+        <Button className={styles.button} variant="contained"  >View more</Button>
+ 
+      {/* </Grid> */}
     </Grid>
   );
 }
