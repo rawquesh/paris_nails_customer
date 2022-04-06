@@ -18,6 +18,25 @@ export default function Footer() {
         </p>
       </div>
       <div className={styles.item}>
+        <h3>Useful links</h3>
+        <span className={styles.divider}></span>
+        <div>
+          <Link href="#" underline="hover">
+            Account
+          </Link>
+        </div>
+        <div>
+          <Link href="#" underline="hover">
+            Bookings
+          </Link>
+        </div>
+        <div>
+          <Link href="#" underline="hover">
+            Privacy Policy
+          </Link>
+        </div>
+      </div>
+      <div className={styles.item}>
         <h3>Opening Hours</h3>
         <span className={styles.divider}></span>
         <p>
@@ -46,6 +65,18 @@ export default function Footer() {
             info@parisnails.com.au
           </Link>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function Bottom() {
+  return (
+    <div className={styles.bottom}>
+      <div>
+        <img src="images/logo.png" height={"65px"}  />
+        <p>Copyright 2022 © Paris Nails. All Rights Reserved.</p>
+        <span />
       </div>
     </div>
   );
