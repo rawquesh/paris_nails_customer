@@ -43,7 +43,7 @@
   font-size: 16px;
   line-height: 1.5;
   font-weight: 400;
-  color: #9b9b9b;
+  color: var(--desc-color);
 }
 
 .header-1-heading {
@@ -58,7 +58,7 @@
   right: 10px;
   width: 70px;
   height: 3px;
-  background-color: #ffd8cb;
+  background-color: var(--theme-color);
   margin: auto;
   box-sizing: border-box;
 }

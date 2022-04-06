@@ -1,3 +1,9 @@
+:root {
+  --theme-color: #ffd8cb;
+  --desc-color: #757575;
+  /* --desc-color2: #757575; */
+}
+
 * {
   /* user-select: none; */
   margin: 0;
@@ -12,4 +18,11 @@ html {
   height: 1vh;
   font-size: 1.2em;
   background-color: white;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }

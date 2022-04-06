@@ -6,6 +6,7 @@ import Members from "./components/members";
 import Section1 from "./components/section1";
 import Prices from "./components/prices";
 import Contact from "./components/contact";
+import Footer from "./components/footer";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Members />
       <Prices />
       <Contact />
+      <Footer />
     </>
   );
 }

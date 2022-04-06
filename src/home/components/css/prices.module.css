@@ -11,7 +11,7 @@
   right: 10px;
   width: 100px;
   height: 3px;
-  background-color: #ffd8cb;
+  background-color: var(--theme-color);
   margin: auto;
   box-sizing: border-box;
   margin-top: 10px;
@@ -36,7 +36,7 @@
   font-size: 15px;
   line-height: 1.5;
   font-weight: 400;
-  color: #9b9b9b;
+  color: var(--desc-color);
   -webkit-text-size-adjust: none;
   -webkit-font-smoothing: subpixel-antialiased;
   text-align: center;
@@ -67,7 +67,7 @@ span {
   font-family: "Montserrat", sans-serif;
 }
 .service p {
-  color: #9b9b9b;
+  color: var(--desc-color);
 }
 
 .button{

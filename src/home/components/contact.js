@@ -1,3 +1,5 @@
+import { Button, TextField } from "@mui/material";
+import { fontFamily, style } from "@mui/system";
 import React from "react";
 import styles from "./css/contact.module.css";
 
@@ -19,8 +21,43 @@ export default function Contact() {
             Have any questions? Feel free to use the contact form below to get
             in touch with us. We will answer you as soon as possible!
           </p>
+          <MyButton label={"Your name"} auto="name" />
+          <MyButton label={"Your email"} auto="email" />
+          <MyButton label={"Your phone"} auto="tel" />
+          <MyButton label={"Your message"} auto="message" rows={5} />
+
+          <Button className={styles.button} fullWidth variant="contained">
+            Send message
+          </Button>
         </div>
       </div>
     </div>
+  );
+}
+
+function MyButton({ label, auto, rows = 1 }) {
+  return (
+    <TextField
+      className={styles.textfield}
+      fullWidth
+      label={label}
+      variant="standard"
+      multiline="true"
+      size="small"
+      rows={rows}
+      autoComplete={auto}
+      InputProps={{
+        style: {
+          fontSize: "16px",
+          fontFamily: "Montserrat, sans-serif",
+        },
+      }}
+      InputLabelProps={{
+        style: {
+          fontSize: "16px",
+          fontFamily: "Montserrat, sans-serif",
+        },
+      }}
+    />
   );
 }
