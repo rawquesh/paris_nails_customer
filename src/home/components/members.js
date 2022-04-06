@@ -10,8 +10,6 @@ export default function Members() {
       container
       direction={"column"}
       className={styles.main}
-      // rowSpacing={4}
-      // gap={3}
     >
       <Grid component={"h2"} className={styles.headline} item>
         Meet Our Experts
