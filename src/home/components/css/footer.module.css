@@ -3,7 +3,8 @@
   max-width: 1200px;
   margin: auto;
   justify-content: space-between;
-  margin-top: 70px;
+  margin-top: 50px;
+  margin-bottom: 70px;
 }
 
 .item {
@@ -89,15 +90,13 @@
     max-width: 600px;
   }
   .bottom div {
-   flex-direction: column;
-
+    flex-direction: column;
   }
-  .bottom img{
+  .bottom img {
     margin-bottom: 10px;
   }
 
-  .bottom p{
+  .bottom p {
     font-size: 13px;
   }
-
 }

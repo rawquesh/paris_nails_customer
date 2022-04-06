@@ -27,6 +27,11 @@ export default function Footer() {
         </div>
         <div>
           <Link href="#" underline="hover">
+            Services
+          </Link>
+        </div>
+        <div>
+          <Link href="#" underline="hover">
             Bookings
           </Link>
         </div>

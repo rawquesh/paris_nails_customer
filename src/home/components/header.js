@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <>
-      <div className="top-header"></div>
+      {/* <div className="top-header"></div> */}
       <div className="main-header">
         <img
           alt="Logo"
