@@ -1,23 +1,8 @@
 :root {
-  --theme-color: #ffd8cb;
-  --desc-color: #757575;
+  --theme-color: #ffc6e2;
+  --theme-color2: #d92a7c;
+  --desc-color: #8f8f8f;
   /* --desc-color2: #757575; */
-}
-
-* {
-  /* user-select: none; */
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-}
-
-html {
-  width: 100%;
-  height: 1vh;
-  font-size: 1.2em;
-  background-color: white;
 }
 
 ul,

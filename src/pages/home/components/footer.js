@@ -79,7 +79,7 @@ export function Bottom() {
   return (
     <div className={styles.bottom}>
       <div>
-        <img src="images/logo.png" height={"65px"}  />
+        <img alt="logo" src="images/logo.png" height={"65px"}  />
         <p>Copyright 2022 © Paris Nails. All Rights Reserved.</p>
         <span />
       </div>

@@ -1,0 +1,17 @@
+* {
+  box-sizing: border-box;
+}
+
+
+.big-image {
+  height: 650px;
+  position: relative;
+  background-position: top center;
+  /* https://cdn.discordapp.com/attachments/891933566571798548/958033873420296242/Bella-Nails-and-Spa-Nail-salon-in-Flemington-NJ-08822-No-5.png */
+}
+
+@media only screen and (max-width: 650px) {
+  .big-image {
+    height: 550px;
+  }
+}

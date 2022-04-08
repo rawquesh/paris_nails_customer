@@ -1,5 +1,4 @@
 import { Button, TextField } from "@mui/material";
-import { fontFamily, style } from "@mui/system";
 import React from "react";
 import styles from "./css/contact.module.css";
 
@@ -42,7 +41,6 @@ function MyButton({ label, auto, rows = 1 }) {
       fullWidth
       label={label}
       variant="standard"
-      multiline="true"
       size="small"
       rows={rows}
       autoComplete={auto}

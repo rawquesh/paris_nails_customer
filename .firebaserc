@@ -1,5 +1,14 @@
 {
   "projects": {
-    "default": "paris-nails-1"
+    "default": "possystem-db408"
+  },
+  "targets": {
+    "possystem-db408": {
+      "hosting": {
+        "customer": [
+          "paris-nails-au"
+        ]
+      }
+    }
   }
 }

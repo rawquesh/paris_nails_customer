@@ -31,10 +31,10 @@ const GREY = {
 // d92a7c
 
 const PRIMARY = {
-  lighter: '#ffd8cb',
-  light: '#ffd8cb',
-  main: '#ffd8cb',
-
+  lighter: '#d92a7c',
+  light: '#d92a7c',
+  main: '#d92a7c',
+// ffd8cb  d92a7c
 };
 const SECONDARY = {
   lighter: '#D6E4FF',

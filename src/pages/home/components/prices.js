@@ -24,7 +24,7 @@ export default function Prices() {
 
       <div className={styles.services}>
         {items.map((e) => (
-          <div className={styles.service}>
+          <div key={e.title} className={styles.service}>
             <div>
               <h4>{e.title}</h4>
               <p>{e.timeline}</p>

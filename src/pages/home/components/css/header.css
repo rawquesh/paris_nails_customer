@@ -21,23 +21,21 @@
 .header-item-1 {
   width: 120px;
 }
-/* .header-item-2 { */
-  /* flex-grow: 1; */
-  /* width: 100%; */
-  /* display: flex; */
-  /* justify-content: space-evenly; */
-/* } */
+.header-item-2 { 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+ }
 
 .mainlabel {
   width: fit-content;
   text-align: center;
-  bottom: 30%;
   border-radius: 5px;
   background-color: white;
   /* padding: 15px 40px; */
   position: absolute;
   left: 50%;
-  bottom: 10%;
+  bottom: 8%;
   transform: translate(-50%, -50%);
   padding: 14px 4%;
 }
@@ -49,6 +47,11 @@
   .header_text {
     font-size: 14px;
     letter-spacing: 0.8px;
+  }
+  .mainlabel {
+
+    bottom: 0%;
+
   }
 }
 @media only screen and (max-width: 450px) {

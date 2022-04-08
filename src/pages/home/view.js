@@ -11,7 +11,10 @@ import Footer, { Bottom } from "./components/footer";
 export default function Home() {
   return (
     <>
-      <div className="big-image">
+      <div
+        className="big-image"
+        style={{ backgroundImage: "url(/images/main.jpg)" }}
+      >
         <Header />
       </div>
       <Section1 />

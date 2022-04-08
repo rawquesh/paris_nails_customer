@@ -29,6 +29,7 @@
 .main-item-2 {
   background-size: cover;
   height: 600px;
+  background-position: center;
 }
 .service-item {
   width: 50%;
