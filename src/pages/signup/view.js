@@ -1,28 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Link,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Link, TextField } from "@mui/material";
 
 import styles from "./style.module.css";
+import { logIn, signUp, updateName } from "../../utils/auth";
+import { useNavigate } from "react-router-dom";
+import { MyAlert } from "../../components/alerts";
+import { useUserAuth } from "../../utils/context";
 
 export default function SignUp() {
-  function handleSubmit(event) {
+  const navigate = useNavigate();
+  const { user } = useUserAuth();
+
+  if (user) {
+    navigate("/");
+  }
+
+  const [error, setError] = useState("");
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    console.log({
+    const val = {
       first_name: data.get("first_name"),
       last_name: data.get("last_name"),
       email: data.get("email"),
       password: data.get("password"),
-      remember: data.get("remember"),
-    });
+    };
+
+    console.log(val);
+
+    if (
+      val.first_name === "" ||
+      val.last_name === "" ||
+      val.email === "" ||
+      val.password === ""
+    ) {
+      setError("Please fill the fields.");
+      return;
+    }
+
+    try {
+      await signUp(val.email, val.password);
+      const user = await logIn(val.email, val.password);
+      await updateName(user.user, val.first_name, val.last_name);
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+      setError(error.message);
+    }
   }
 
   return (
@@ -31,6 +58,15 @@ export default function SignUp() {
         <img alt="logo" src="images/logo.png" />
       </Link>
       <h2>Sign Up</h2>
+      {error && (
+        <MyAlert
+          type="error"
+          message={error}
+          onClose={() => {
+            setError("");
+          }}
+        />
+      )}
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <div className={styles.name}>
           <TextField

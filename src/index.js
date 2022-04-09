@@ -15,6 +15,8 @@ import ForgotPassword from "./pages/forgot_password/view";
 
 import { UserAuthContextProvider } from "./utils/context";
 import ProtectedRoute from "./utils/protected_route";
+import Account from "./pages/account/account";
+// import LoggedInRoute from "./utils/logged_routes";
 
 function App() {
   return (
@@ -29,6 +31,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Services />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="account"
+              element={
+                <ProtectedRoute>
+                  <Account />
                 </ProtectedRoute>
               }
             />

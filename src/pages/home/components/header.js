@@ -1,12 +1,15 @@
 import { Button, Link, Typography } from "@mui/material";
 import React from "react";
+import { logOut } from "../../../utils/auth";
+import { useUserAuth } from "../../../utils/context";
 
 import "./css/header.css";
 
 export default function Header() {
   //   const componentRef = useRef();
+  const { user } = useUserAuth();
 
-
+  // logOut()
 
   return (
     <>
@@ -20,7 +23,11 @@ export default function Header() {
         <div className="header-item header-item-2">
           <MyButton2 title="Services" path="/services" />
           <MyButton2 title="Contact Us" path="#contact" />
-          <MyButton title="Account" path="/login" />
+          {user ? (
+            <MyButton title="Account" path="/account" />
+          ) : (
+            <MyButton title="Sign In" path="/login" />
+          )}
         </div>
       </div>
       <MainLabel click={() => {}} />

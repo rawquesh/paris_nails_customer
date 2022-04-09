@@ -1,28 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
+  // Checkbox,
+  // FormControlLabel,
   Link,
   TextField,
 } from "@mui/material";
 
-import styles from "./style.module.css";
+import isEmail from "validator/es/lib/isEmail";
 import GoogleButton from "react-google-button";
 
+import styles from "./style.module.css";
+import { googleSignIn, logIn } from "../../utils/auth";
+import { MyAlert } from "../../components/alerts";
+import { useUserAuth } from "../../utils/context";
+
 export default function Login() {
-  function handleSubmit(event) {
+  const { user } = useUserAuth();
+  const navigate = useNavigate();
+
+  if (user) {
+    navigate('/')
+  }
+
+  const [error, setError] = useState("");
+
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    console.log({
+    const values = {
       email: data.get("email"),
       password: data.get("password"),
-      remember: data.get("remember"),
-    });
+    };
+
+    if (values.email === "" || values.password === "") {
+      setError("Please fill the fields.");
+      return;
+    }
+
+    if (!isEmail(values.email)) {
+      setError("Enter a vaild email address.");
+      return;
+    }
+
+    try {
+      await logIn(values.email, values.password);
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+      setError(error.message);
+    }
   }
+
+  const handleGoogleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className={styles.main}>
@@ -30,6 +73,16 @@ export default function Login() {
         <img alt="logo" src="images/logo.png" />
       </Link>
       <h2>Login</h2>
+      {error && (
+        <MyAlert
+          type="error"
+          message={error}
+          onClose={() => {
+            setError("");
+          }}
+        />
+      )}
+
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
           margin="normal"
@@ -51,10 +104,10 @@ export default function Login() {
           id="password"
           autoComplete="current-password"
         />
-        <FormControlLabel
+        {/* <FormControlLabel
           control={<Checkbox name="remember" value="remember" />}
           label="Remember me"
-        />
+        /> */}
         <Button
           type="submit"
           fullWidth
@@ -65,9 +118,7 @@ export default function Login() {
         </Button>
         <GoogleButton
           style={{ width: "100%", marginBottom: "10px" }}
-          onClick={() => {
-            console.log("google hihi");
-          }}
+          onClick={handleGoogleSignIn}
         />
 
         <div className={styles.links}>
