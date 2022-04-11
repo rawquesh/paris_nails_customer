@@ -7,29 +7,13 @@ import "./css/header.css";
 
 export default function Header() {
   //   const componentRef = useRef();
-  const { user } = useUserAuth();
 
   // logOut()
 
   return (
     <>
-      <div className="top-header"></div>
-      <div className="main-header">
-        <img
-          alt="Logo"
-          className="header-item header-item-1"
-          src="images/logo.png"
-        />
-        <div className="header-item header-item-2">
-          <MyButton2 title="Services" path="/services" />
-          <MyButton2 title="Contact Us" path="#contact" />
-          {user ? (
-            <MyButton title="Account" path="/account" />
-          ) : (
-            <MyButton title="Sign In" path="/login" />
-          )}
-        </div>
-      </div>
+      {/* <div className="top-header"></div> */}
+      <NavBar />
       <MainLabel click={() => {}} />
     </>
   );
@@ -108,5 +92,30 @@ function MyButton({ title, path }) {
         </Typography>
       </Button>
     </Link>
+  );
+}
+
+export function NavBar() {
+  const { user } = useUserAuth();
+
+  return (
+    <div className="main-header">
+      <Link href="/" >
+        <img
+          alt="Logo"
+          className="header-item header-item-1"
+          src="images/logo.png"
+        />
+      </Link>
+      <div className="header-item header-item-2">
+        <MyButton2 title="Services" path="/services" />
+        <MyButton2 title="Contact Us" path="#contact" />
+        {user ? (
+          <MyButton title="Account" path="/account" />
+        ) : (
+          <MyButton title="Sign In" path="/login" />
+        )}
+      </div>
+    </div>
   );
 }

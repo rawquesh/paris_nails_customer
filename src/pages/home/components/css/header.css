@@ -11,21 +11,28 @@
   align-items: center;
   background-color: white;
   padding: 5px 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 25px;
 }
 
 .header_text {
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-family: "Montserrat";
+  color: #151515;
+  font-size: 15.5px;
+  line-height: 1.2;
+  transition: 0.25s;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .header-item-1 {
   width: 120px;
+  margin-left: 10px;
 }
-.header-item-2 { 
+.header-item-2 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
- }
+}
 
 .mainlabel {
   width: fit-content;
@@ -49,13 +56,14 @@
     letter-spacing: 0.8px;
   }
   .mainlabel {
-
     bottom: 0%;
-
   }
 }
 @media only screen and (max-width: 450px) {
   .mainlabel {
     padding: 10px 20px;
+  }
+  .header-item-1 {
+    margin-left: 0;
   }
 }
