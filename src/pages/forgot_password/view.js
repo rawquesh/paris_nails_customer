@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button, Link, TextField } from "@mui/material";
 
 import styles from "./style.module.css";
-import { MyAlert } from "../../components/alerts";
+import { MyAlert } from "../../components/feedback";
 import { passwordReset } from "../../utils/auth";
 
 import isEmail from "validator/es/lib/isEmail";

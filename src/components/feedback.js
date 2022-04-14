@@ -1,5 +1,6 @@
-import { Alert } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import React from "react";
+import PropTypes from "prop-types";
 
 /// type : success, error, info.
 export function MyAlert({ type, message, onClose }) {
@@ -32,3 +33,29 @@ export function MyAlert({ type, message, onClose }) {
     </Alert>
   );
 }
+
+export function MySnackbar(props) {
+  const duration = 5000;
+  return (
+    <Snackbar
+      open={props.open}
+      autoHideDuration={duration}
+      onClose={props.onClose}
+    >
+      <MyAlert {...props} />
+    </Snackbar>
+  );
+}
+
+MyAlert.prototype = {
+  onClose: PropTypes.func,
+  type: PropTypes.string,
+  message: PropTypes.string,
+};
+
+MySnackbar.prototype = {
+  open: PropTypes.func,
+  onClose: PropTypes.func,
+  type: PropTypes.string,
+  message: PropTypes.string,
+};

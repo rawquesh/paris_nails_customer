@@ -5,7 +5,7 @@ import { Box, Button, Link, TextField } from "@mui/material";
 import styles from "./style.module.css";
 import { logIn, signUp, updateName } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
-import { MyAlert } from "../../components/alerts";
+import { MyAlert } from "../../components/feedback";
 import { useUserAuth } from "../../utils/context";
 
 export default function SignUp() {

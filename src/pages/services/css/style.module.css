@@ -20,15 +20,20 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-
 }
 .categories {
-  flex-grow: 80; 
+  flex-grow: 80;
 }
 .services {
   border-left: 1.5px solid var(--theme-color);
   border-right: 1.5px solid var(--theme-color);
+}
 
+.service {
+  max-height: 700px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .section h3 {
@@ -40,8 +45,8 @@
   padding: 10px;
 }
 
-.Divider{
-    height: 1.5px;
-    width: 100%;
-    background-color: var(--theme-color)
+.Divider {
+  height: 1.5px;
+  width: 100%;
+  background-color: var(--theme-color);
 }
