@@ -1,7 +1,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: auto;
   margin-top: 10px;
   border: 1.5px solid var(--theme-color);
@@ -15,38 +15,87 @@
 }
 
 .section {
-  /* width: 100%; */
+  width: 100%;
   flex-grow: 100;
   text-align: center;
   display: flex;
   flex-direction: column;
 }
 .categories {
-  flex-grow: 80;
+  width: 600px;
+  /* flex-shrink: 0; */
+  flex-grow: 0;
 }
 .services {
   border-left: 1.5px solid var(--theme-color);
   border-right: 1.5px solid var(--theme-color);
 }
 
-.service {
-  max-height: 700px;
+.inner_section {
+  max-height: 500px;
   overflow: auto;
   display: flex;
   flex-direction: column;
+  padding: 0 1vw;
 }
 
 .section h3 {
   font-family: "Montserrat", sans-serif;
   letter-spacing: 0;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.2;
   font-weight: 500;
   padding: 10px;
 }
 
 .Divider {
-  height: 1.5px;
+  height: 1px;
   width: 100%;
   background-color: var(--theme-color);
+}
+
+.label {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.label p {
+  font-size: 14.5px;
+  text-align: start;
+}
+
+.specs {
+  width: 90px;
+  /* min-width: 60px; */
+  display: flex;
+  justify-content: space-between;
+}
+
+.horiCategories {
+  display: none;
+}
+
+@media only screen and (max-width: 1200px) {
+  .categories {
+    display: none;
+  }
+  .horiCategories {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+  }
+  .cateTextTop {
+    font-size: 17px;
+    border-bottom: 1.5px solid var(--theme-color);
+
+    /* font-weight: bold; */
+  }
+  .horiCategories2 {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+  }
 }

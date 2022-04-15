@@ -1,7 +1,6 @@
-import { Checkbox, FormControlLabel, List } from "@mui/material";
+import { Checkbox, FormControlLabel } from "@mui/material";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-// import { MySnackbar } from "../../components/feedback";
 
 import Heading from "../../components/heading";
 import { db } from "../../utils/firebaseConfig";
@@ -10,17 +9,20 @@ import { NavBar } from "../home/components/header";
 import styles from "./css/style.module.css";
 
 export default function Services() {
-  let [categories, setcategories] = useState([]);
+  const [categories, setcategories] = useState([]);
 
-  let [selectedCategories, setSelectedcategories] = useState([]);
+  const [services, setServices] = useState([]);
 
-  let [services, setServices] = useState([]);
-  let [selectedServices, setSelectedServices] = useState([]);
-  // const [snackBar, setSnackBar] = useState(false);
+  const [allServices, setAllServices] = useState([]);
+
+  const [selectedServices, setSelectedServices] = useState([]);
+
+  const [selectedCategory, setSelectedCategory] = useState("Popular");
 
   useEffect(() => {
     fetchCategories();
     fetchServices();
+    // eslint-disable-next-line
   }, []);
 
   async function fetchCategories() {
@@ -28,8 +30,8 @@ export default function Services() {
 
     try {
       const docRef = await getDoc(query);
-      setcategories(docRef.data().data);
-      console.log(docRef.data().data);
+      const cate = docRef.data().data;
+      setcategories(["Popular", ...cate]);
     } catch (error) {
       console.log(error);
     }
@@ -37,57 +39,135 @@ export default function Services() {
 
   async function fetchServices() {
     const snapshot = await getDocs(collection(db, "services"));
-    setServices(snapshot.docs.map(documentDataToObject));
-    console.log(snapshot.docs.map(documentDataToObject));
+    const _fetched = snapshot.docs.map(documentDataToObject);
+    setAllServices(_fetched);
+
+    handleCategoryChange(selectedCategory, _fetched);
+  }
+
+  function handleCategoryChange(value, services) {
+    if (value === "Popular") {
+      const sortArray = [...services];
+      sortArray.sort((a, b) => a.popular - b.popular).reverse();
+      setServices(sortArray.slice(0, 10));
+    } else {
+      const filtered = services.filter((val) => val.categories.includes(value));
+      setServices(filtered);
+    }
+    setSelectedCategory(value);
+  }
+
+  function handleServicesChange(event, e) {
+    if (!event.target.checked) {
+      setSelectedServices(selectedServices.filter((value) => value !== e));
+    } else {
+      setSelectedServices([...selectedServices, e]);
+    }
   }
 
   return (
     <div>
       <NavBar />
       <Heading />
+
+      <div className={styles.horiCategories}>
+        <span className={styles.cateTextTop}>Categories : </span>
+        <div className={styles.horiCategories2}>
+          {categories.map((e) => (
+            <FormControlLabel
+              key={e}
+              control={
+                <Checkbox
+                  onChange={(_) => {
+                    handleCategoryChange(e, allServices);
+                  }}
+                  checked={selectedCategory === e}
+                />
+              }
+              label={<p>{e}</p>}
+            />
+          ))}
+        </div>
+      </div>
       <div className={styles.main}>
         <div className={styles.sections}>
           <div className={`${styles.categories} ${styles.section}`}>
             <h3>categories</h3>
             <span className={styles.Divider} />
-            {categories.map((e) => (
-              <FormControlLabel
-                control={<Checkbox defaultChecked />}
-                label={e}
-              />
-            ))}
+            <div className={styles.inner_section}>
+              {categories.map((e) => (
+                <FormControlLabel
+                  key={e}
+                  control={
+                    <Checkbox
+                      onChange={(_) => {
+                        handleCategoryChange(e, allServices);
+                      }}
+                      checked={selectedCategory === e}
+                    />
+                  }
+                  label={<p>{e}</p>}
+                />
+              ))}
+            </div>
           </div>
           <div className={`${styles.services} ${styles.section}`}>
             <h3>Services</h3>
             <span className={styles.Divider} />
-            <div className={styles.service}>
+            <div className={styles.inner_section}>
               {services.map((e) => (
-                <FormControlLabel
-                  key={e.id}
-                  control={
-                    <Checkbox
-                      onChange={(event) => {
-                        if (!event.target.checked) {
-                          setSelectedServices(
-                            selectedServices.filter((value) => value !== e)
-                          );
-                        } else {
-                          setSelectedServices([...selectedServices, e]);
-                        }
-                      }}
-                      checked={selectedServices
-                        .map(getArrayOfIDs)
-                        .includes(e.id)}
-                    />
-                  }
-                  label={e.name}
-                />
+                <div key={e.id} className={styles.label}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={(event) => {
+                          handleServicesChange(event, e);
+                        }}
+                        checked={selectedServices
+                          .map(getArrayOfIDs)
+                          .includes(e.id)}
+                      />
+                    }
+                    label={<p>{e.name}</p>}
+                  />
+                  <div className={styles.specs}>
+                    <p>${e.price}</p>
+                    <p>
+                      <span>{e.duration}</span>min
+                    </p>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
           <div className={`${styles.selected_services} ${styles.section}`}>
             <h3>Selected Services</h3>
             <span className={styles.Divider} />
+            <div className={styles.inner_section}>
+              {selectedServices.map((e) => (
+                <div key={e.id} className={styles.label}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={(event) => {
+                          handleServicesChange(event, e);
+                        }}
+                        checked={selectedServices
+                          .map(getArrayOfIDs)
+                          .includes(e.id)}
+                      />
+                    }
+                    label={<p>{e.name}</p>}
+                  />
+                  <div className={styles.specs}>
+                    <p>${e.price}</p>
+                    <p>
+                      <span>{e.duration}</span>min
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
