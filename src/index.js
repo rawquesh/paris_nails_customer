@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Route } from "react-router-dom";
 import { Routes } from "react-router-dom";
 
 import ThemeConfig from "./theme";
@@ -16,6 +16,7 @@ import ForgotPassword from "./pages/forgot_password/view";
 import { UserAuthContextProvider } from "./utils/context";
 import ProtectedRoute from "./utils/protected_route";
 import Account from "./pages/account/account";
+import ChooseStaffTime from "./pages/staff_time/view";
 // import LoggedInRoute from "./utils/logged_routes";
 
 function App() {
@@ -42,9 +43,18 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="choose-staff-time"
+              element={
+                <ProtectedRoute>
+                  <ChooseStaffTime />
+                </ProtectedRoute>
+              }
+            />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="*" element={<Navigate to='/' />} />
           </Routes>
         </Router>
       </UserAuthContextProvider>

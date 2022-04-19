@@ -1,18 +1,22 @@
-import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import PropTypes from "prop-types";
+import { useMemo } from "react";
 // material
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import { CssBaseline } from "@mui/material";
+import {
+  ThemeProvider,
+  createTheme,
+  StyledEngineProvider,
+} from "@mui/material/styles";
 //
-import shape from './shape';
-import palette from './palette';
-import typography from './typography';
-import shadows, { customShadows } from './shadows';
+import shape from "./shape";
+import palette from "./palette";
+import typography from "./typography";
+import shadows, { customShadows } from "./shadows";
 
 // ----------------------------------------------------------------------
 
 ThemeConfig.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default function ThemeConfig({ children }) {
@@ -22,7 +26,14 @@ export default function ThemeConfig({ children }) {
       shape,
       typography,
       shadows,
-      customShadows
+      customShadows,
+      components: {
+        MuiButtonBase: {
+          defaultProps: {
+            disableRipple: true,
+          },
+        },
+      },
     }),
     []
   );

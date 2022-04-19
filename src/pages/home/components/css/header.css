@@ -9,7 +9,7 @@
   justify-content: space-between;
   flex-flow: row;
   align-items: center;
-  background-color: white;
+  background-color: #f7f2ef;
   padding: 5px 10px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 25px;
 }
@@ -32,6 +32,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 }
 
 .mainlabel {
@@ -46,6 +47,8 @@
   transform: translate(-50%, -50%);
   padding: 14px 4%;
 }
+
+
 
 @media only screen and (max-width: 650px) {
   .main-header {

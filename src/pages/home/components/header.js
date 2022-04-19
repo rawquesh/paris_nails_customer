@@ -55,9 +55,9 @@ function MyButton2({ title, className, path }) {
   return (
     <Link href={path} underline="none">
       <Button
-        className={className + " top_buttons"}
         style={{
-          margin: "5px 5px 0",
+          margin: "10px 2px",
+          padding: "8px",
           borderRadius: "3px",
         }}
       >
@@ -78,8 +78,8 @@ function MyButton({ title, path }) {
       <Button
         variant="outlined"
         style={{
-          margin: "5px 5px 0",
-          padding: "5px 25px",
+          margin: "10px 0px",
+          padding: "6px 25px",
           borderRadius: "100px",
         }}
       >
@@ -100,7 +100,7 @@ export function NavBar() {
 
   return (
     <div className="main-header">
-      <Link href="/" >
+      <Link href="/">
         <img
           alt="Logo"
           className="header-item header-item-1"
