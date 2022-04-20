@@ -1,7 +1,7 @@
 import { Breadcrumbs, Link } from "@mui/material";
 import styles from "./css/heading.module.css";
 
-export default function Heading() {
+export default function Heading({ title }) {
   return (
     <>
       <div
@@ -11,16 +11,16 @@ export default function Heading() {
         className={styles.main}
       >
         <div className={styles.bg}>
-          <h1>Services</h1>
+          <h1>{title}</h1>
         </div>
       </div>
       <div className={styles.breadcrumbs}>
-        <div className={styles.breadcrumbs2} >   
+        <div className={styles.breadcrumbs2}>
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="/">
               Home
             </Link>
-            <p  >Services</p>
+            <p>{title}</p>
           </Breadcrumbs>
         </div>
       </div>

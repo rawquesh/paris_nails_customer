@@ -77,8 +77,13 @@ export default function Services() {
   function handleServicesChange(event, e) {
     if (!event.target.checked) {
       setSelectedServices(selectedServices.filter((value) => value !== e));
-    } else {
+    } else if (selectedServices.length < 10) {
       setSelectedServices([...selectedServices, e]);
+    } else {
+      showToast({
+        type: "warning",
+        message: "You can add 10 services at one time.",
+      });
     }
   }
 
@@ -204,7 +209,7 @@ export default function Services() {
   return (
     <div>
       <NavBar />
-      <Heading />
+      <Heading title="Services" />
 
       <div className={styles.horiCategories}>
         <span className={styles.cateTextTop}>Categories : </span>

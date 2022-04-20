@@ -7,23 +7,29 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Heading from "../../components/heading";
+import { db } from "../../utils/firebaseConfig";
+import { documentDataToObject } from "../../utils/functions/firestore";
 import { showToast } from "../../utils/functions/toast";
 import useQuery from "../../utils/functions/use_query";
+import Footer, { Bottom } from "../home/components/footer";
+import { NavBar } from "../home/components/header";
 
 export default function ChooseStaffTime() {
   const navigate = useNavigate();
+  const query = useQuery();
 
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    fetchServices();
+    // fetchServices();
   }, []);
 
   async function fetchServices() {
-    let ids = useQuery().get("ids").split("|");
+    let ids = query.get("ids").split("|");
 
     if (ids.length > 10) {
-      navigate('/')
+      navigate("/");
       return;
     }
 
@@ -38,5 +44,12 @@ export default function ChooseStaffTime() {
     }
   }
 
-  return <div>ChooseStaffTime</div>;
+  return (
+    <div>
+      <NavBar />
+      <Heading title="Choose a day & time" />
+      <Footer />
+      <Bottom />
+    </div>
+  );
 }
