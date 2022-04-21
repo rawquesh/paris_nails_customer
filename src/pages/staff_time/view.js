@@ -48,6 +48,7 @@ export default function ChooseStaffTime() {
     <div>
       <NavBar />
       <Heading title="Choose a day & time" />
+      
       <Footer />
       <Bottom />
     </div>
