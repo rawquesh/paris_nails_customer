@@ -1,0 +1,17 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: auto;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.midHeading {
+  font-size: 20px;
+  font-weight: 400;
+  color: #151515;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
