@@ -12,7 +12,7 @@ import { NavBar } from "../home/components/header";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TextField } from "@mui/material";
+import { Divider, TextField } from "@mui/material";
 import { addDays, isAfter, isBefore, isDate, subDays } from "date-fns";
 
 import styles from "./style.module.css";
@@ -116,6 +116,8 @@ export default function ChooseStaffTime() {
             />
           </LocalizationProvider>
         </div>
+        <Divider variant="middle"  />
+        <BuildTitle title="Choose your staff" />
       </div>
 
       <Footer />

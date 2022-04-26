@@ -33,6 +33,13 @@ export default function ThemeConfig({ children }) {
             disableRipple: true,
           },
         },
+        MuiDivider: {
+          styleOverrides: {
+            root: {
+              margin: "15px 0",
+            },
+          },
+        },
       },
     }),
     []
