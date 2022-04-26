@@ -18,8 +18,6 @@ import { addDays, isAfter, isBefore, isDate, subDays } from "date-fns";
 import styles from "./style.module.css";
 import {
   DatePicker,
-  DesktopDatePicker,
-  MobileDatePicker,
 } from "@mui/x-date-pickers";
 
 export default function ChooseStaffTime() {
@@ -56,8 +54,6 @@ export default function ChooseStaffTime() {
   function handleChange(newValue) {
     setDate(newValue);
 
-    // console.log(newValue);
-
 
     if (isDate(newValue)) {
       let now = new Date();
@@ -75,7 +71,7 @@ export default function ChooseStaffTime() {
   }
 
   return (
-    <div>
+    <>
       <NavBar />
       <Heading title="Choose a day & time" />
       <div className={styles.main}>
@@ -124,7 +120,7 @@ export default function ChooseStaffTime() {
 
       <Footer />
       <Bottom />
-    </div>
+    </>
   );
 }
 
