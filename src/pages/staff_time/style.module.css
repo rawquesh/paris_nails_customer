@@ -15,3 +15,36 @@
   letter-spacing: 0.5px;
   font-weight: bold;
 }
+
+.service {
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 5px;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.service h4 {
+  font-size: 15px;
+  font-weight: 400;
+  color: #151515;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0.5px;
+  font-weight: normal;
+}
+
+.Button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Button button {
+  width: 180px;
+  height: 40px;
+  margin: 10px;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 500;
+  padding: 10px;
+}
