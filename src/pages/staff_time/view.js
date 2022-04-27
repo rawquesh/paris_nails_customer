@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import {
   collection,
+  doc,
   documentId,
+  getDoc,
   getDocs,
   limit,
   orderBy,
   query,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
@@ -36,25 +39,36 @@ import {
 import { addDays, isAfter, isBefore, isDate } from "date-fns";
 
 import styles from "./style.module.css";
-import { DatePicker } from "@mui/x-date-pickers";
+import { DatePicker, DesktopDatePicker } from "@mui/x-date-pickers";
 import { randomInteger } from "../../utils/functions/math";
 import { getDateAsString, PaymentStatus } from "./functions";
 
-export default function ChooseStaffTime(props) {
+export default function ChooseStaffTime() {
   const navigate = useNavigate();
   const queryParam = useQuery();
 
   const idsFromParam = queryParam.get("ids").split("|");
 
   const [services, setServices] = useState([]);
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [datePickerError, setDatePickerError] = React.useState(null);
+  const [shopTimeLine, setShopTimeLine] = useState([]);
+  const [offDays, setOffDays] = useState([]);
+  const [workers, setWorkers] = useState([]);
+  const [bookings, setBookings] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [datePickerError, setDatePickerError] = useState(null);
+  const [isBookingsLoading, setIsBookingsLoading] = useState(true);
 
   useEffect(() => {
     fetchServices();
-    // fetchShopTimeline();
+    fetchShopTimeline();
+    fetchBookings(selectedDate);
+    fetchShopWorker();
+    fetchOffDays();
     // eslint-disable-next-line
   }, []);
+
+  // Fetch Requests =======================================================
 
   async function fetchServices() {
     if (idsFromParam.length > 10) {
@@ -75,7 +89,8 @@ export default function ChooseStaffTime(props) {
       showToast({ type: "error", message: error.message });
     }
   }
-  async function fetchBookings() {
+  async function fetchBookings(date) {
+    setIsBookingsLoading(true);
     const q = query(
       collection(db, "bookings"),
       where("status", "in", [
@@ -83,16 +98,17 @@ export default function ChooseStaffTime(props) {
         PaymentStatus.atShop,
         PaymentStatus.completed,
       ]),
-      where("scheduled_date", "==", getDateAsString(selectedDate))
+      where("scheduled_date", "==", getDateAsString(date))
     );
 
     try {
       const snapshot = await getDocs(q);
       const _fetched = snapshot.docs.map(documentDataToObject);
-      setServices(_fetched);
+      console.log(_fetched);
     } catch (error) {
       showToast({ type: "error", message: error.message });
     }
+    setIsBookingsLoading(false);
   }
 
   async function fetchShopTimeline() {
@@ -111,9 +127,33 @@ export default function ChooseStaffTime(props) {
     }
   }
 
+  async function fetchShopWorker() {
+    const q = query(collection(db, "workers"), orderBy("date_joined", "desc"));
+
+    try {
+      const snapshot = await getDocs(q);
+      const _fetched = snapshot.docs.map(documentDataToObject);
+      console.log(_fetched);
+    } catch (error) {
+      showToast({ type: "error", message: error.message });
+    }
+  }
+  async function fetchOffDays() {
+    const query = doc(db, "shop", "offday");
+
+    try {
+      const snapshot = await getDoc(query);
+      const _fetched = snapshot.data();
+      console.log(_fetched);
+    } catch (error) {
+      showToast({ type: "error", message: error.message });
+    }
+  }
+
+  //  Functions ====================================================================
+
   function handleChange(newValue) {
     setSelectedDate(newValue);
-
     if (isDate(newValue)) {
       let now = new Date();
       let later = addDays(now, 16);
@@ -124,7 +164,7 @@ export default function ChooseStaffTime(props) {
       const validate = isAfter(newDate, now) && isBefore(newDate, later);
 
       if (validate) {
-        console.log("correct date is ", newDate);
+        fetchBookings(newDate);
       }
     }
   }
@@ -136,86 +176,41 @@ export default function ChooseStaffTime(props) {
 
   // Components ======================================================================
 
-  function DatePickerSection() {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          flexWrap: "wrap",
-        }}
-      >
-        <BuildTitle title="Choose a day" />
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            minDate={new Date()}
-            maxDate={addDays(new Date(), 15)}
-            label="Pick a date"
-            inputFormat="MM/dd/yyyy"
-            value={selectedDate}
-            onChange={handleChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                helperText={datePickerError}
-                error={datePickerError !== null}
-                size="small"
-              />
-            )}
-            onError={(r, v) => {
-              let error = null;
-              if (r === "maxDate") {
-                error = "Date should be under 15 days from now";
-              } else if (r === "minDate") {
-                error = "You can not pick older dates.";
-              } else if (r === "invalidDate") {
-                error = "Pick a vaild date.";
-              } else if (typeof r === String) {
-                error = r;
-              }
-              setDatePickerError(error);
-            }}
-            pro
-          />
-        </LocalizationProvider>
-      </div>
-    );
-  }
-
   function ServicesSection() {
     const heights = [];
     for (let index = 0; index < idsFromParam.length; index++) {
       heights.push(randomInteger(30, 50));
     }
-    // return (
-    //   <div className={styles.services}>
-    //     {services.length !== 0
-    //       ? services.map((e, i) => (
-    //           <div key={e.id} className={styles.service}>
-    //             <h4>
-    //               {i + 1}. {e.name}, {e.price}$, {e.duration}min
-    //             </h4>
-    //           </div>
-    //         ))
-    //       : heights.map((e) => (
-    //           <Skeleton key={e + randomInteger(1, 1000)} height={e} />
-    //         ))}
-    //   </div>
-    // );
 
     return (
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 350 }} aria-label="simple table">
           <TableHead>
             <TableRow
-              sx={{
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: "15.5px",
                 borderBottom: "1.4px solid var(--theme-color)",
                 backgroundColor: "var(--theme-color)",
-                "*": { fontFamily: "Montserrat", fontSize: "15.5px" },
               }}
             >
-              <TableCell>Services</TableCell>
-              <TableCell align="right">Staff And Time</TableCell>
+              <TableCell
+                style={{
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: "15.5px",
+                }}
+              >
+                Services
+              </TableCell>
+              <TableCell
+                style={{
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: "15.5px",
+                }}
+                align="right"
+              >
+                Staff And Time
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -232,7 +227,11 @@ export default function ChooseStaffTime(props) {
                       {service.name}
                     </TableCell>
                     <TableCell align="right">
-                      <Button style={{ fontSize: "12px" }} variant="outlined">
+                      <Button
+                        style={{ fontSize: "12px" }}
+                        variant="outlined"
+                        disabled={isBookingsLoading}
+                      >
                         Choose
                       </Button>
                     </TableCell>
@@ -271,7 +270,47 @@ export default function ChooseStaffTime(props) {
       <NavBar />
       <Heading title="Choose a day & time" />
       <div className={styles.main}>
-        <DatePickerSection />
+        {/* <DatePickerSection /> */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
+          }}
+        >
+          <BuildTitle title="Choose a day" />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              minDate={new Date()}
+              maxDate={addDays(new Date(), 15)}
+              label="Pick a date"
+              inputFormat="MM/dd/yyyy"
+              value={selectedDate}
+              onChange={handleChange}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  helperText={datePickerError}
+                  error={datePickerError !== null}
+                  size="small"
+                />
+              )}
+              onError={(r, v) => {
+                let error = null;
+                if (r === "maxDate") {
+                  error = "Date should be under 15 days from now";
+                } else if (r === "minDate") {
+                  error = "You can not pick older dates.";
+                } else if (r === "invalidDate") {
+                  error = "Pick a vaild date.";
+                } else if (typeof r === String) {
+                  error = r;
+                }
+                setDatePickerError(error);
+              }}
+            />
+          </LocalizationProvider>
+        </div>
 
         <Divider variant="middle" />
         <BuildTitle title="Choose staff and time" />

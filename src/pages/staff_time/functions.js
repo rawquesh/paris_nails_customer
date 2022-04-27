@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export class PaymentStatus {
   static pending = "pending";
   static approved = "approved";
@@ -20,5 +22,5 @@ export class PaymentStatus {
 }
 
 export function getDateAsString(date) {
-  return `${date.getFullYear()}/${date.getMonth()}/${date.getDay()}`;
+  return format(date, "Y/M/d");
 }
