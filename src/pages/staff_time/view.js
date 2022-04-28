@@ -158,7 +158,7 @@ export default function ChooseStaffTime() {
 
     try {
       const snapshot = await getDoc(query);
-      const _fetched = snapshot.data();
+      const _fetched = snapshot.data().day;
       setOffDays(_fetched);
     } catch (error) {
       showToast({ type: "error", message: error.message });
@@ -365,18 +365,20 @@ export default function ChooseStaffTime() {
         <Divider variant="middle" />
       </div>
 
-      <MyDialog
-        key={serviceForDialog}
-        service={serviceForDialog}
-        bookings={bookings}
-        workers={workers}
-        shopTimeLine={shopTimeLine}
-        dialogOpen={dialogOpen}
-        handleDialogSave={handleDialogSave}
-        handleDialogClose={handleDialogClose}
-        selectedDate={selectedDate}
-        offDays={offDays}
-      />
+      {!canDialogOpen && (
+        <MyDialog
+          key={serviceForDialog}
+          service={serviceForDialog}
+          bookings={bookings}
+          workers={workers}
+          shopTimeLine={shopTimeLine}
+          dialogOpen={dialogOpen}
+          handleDialogSave={handleDialogSave}
+          handleDialogClose={handleDialogClose}
+          date={selectedDate}
+          offDays={offDays}
+        />
+      )}
 
       <Footer />
       <Bottom />
@@ -397,7 +399,12 @@ function MyDialog({
 }) {
   const [selectedWorker, setSelectedWorker] = useState();
 
-  const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState();
+
+  useEffect(() => {
+    setSelectedDate(undefined);
+    setSelectedWorker(undefined);
+  }, [service]);
 
   function getSortedWorkers() {
     return workers;
@@ -409,9 +416,13 @@ function MyDialog({
       (e) => e.weekday === cD.getDay() + 1
     )[0];
     let cWorker = selectedWorker;
+    if (cWorker === undefined) {
+      return [];
+    }
+    // console.log(cWorker.workingTime);
     let o = _tl.opening.split(":");
     let c = _tl.closing.split(":");
-    let wD = cWorker.workingTime.filter((e) => e.day === cD.getDay() + 1)[0];
+    let wD = cWorker.working_time.filter((e) => e.day === cD.getDay() + 1)[0];
     let oldtimeList = [];
     if (offDays.includes(cD.getDay() + 1)) return [];
     let oT = new Date(
@@ -421,11 +432,21 @@ function MyDialog({
       o[0],
       o[1]
     );
-    let cT = oT.setHours(o[0], o[1]);
+    let cT = new Date(
+      cD.getFullYear(),
+      cD.getMonth(),
+      cD.getDate(),
+      c[0],
+      c[1]
+    );
+    // let cT = oT.setHours(c[0], c[1]);
 
     while (isBefore(oT, cT)) {
+      console.log(oT);
+      oldtimeList.push(oT);
       oT = addMinutes(oT, 15);
     }
+    return oldtimeList;
 
     let timeList = [];
     let _now = new Date();
@@ -433,44 +454,36 @@ function MyDialog({
     for (const time of oldtimeList) {
       if (isAfter(time, _now)) {
         if (wD !== null) {
-          let wF = MyDateTime.toAus(
-            cD.year,
-            cD.month,
-            cD.day,
+          let wF = new Date(
+            cD.getFullYear(),
+            cD.getMonth(),
+            cD.getDate(),
             wD.from.split(":")[0],
             wD.from.split(":")[1]
           );
-          let wT = MyDateTime.toAus(
-            cD.year,
-            cD.month,
-            cD.day,
+          let wT = new Date(
+            cD.getFullYear(),
+            cD.getMonth(),
+            cD.getDate(),
             wD.to.split(":")[0],
-            wD.to.split(":")[1],
+            wD.to.split(":")[1]
           );
           if (
             (isBefore(wF, time) || isSameSecond(wF, time)) &&
             isAfter(wT, time)
           ) {
-            timeList.add(time);
+            timeList.push(time);
           }
         } else {
-          timeList.add(time);
+          timeList.push(time);
         }
       }
     }
 
-    
-
+    return timeList;
   }
 
-  useLayoutEffect(() => {
-    setSelectedDates([]);
-    setSelectedWorker(undefined);
-  }, [service]);
-
-  // useEffect(() => {
-
-  // }, [service]);
+  let sortedDates = getSortedDates();
 
   return (
     <Dialog
@@ -510,6 +523,35 @@ function MyDialog({
               })}
             </div>
             <Divider />
+            <div>
+              {sortedDates.length === 0 ? (
+                <div>
+                  {selectedWorker === undefined
+                    ? "Select a staff."
+                    : "Nothing to show here"}
+                </div>
+              ) : (
+                sortedDates.map((e) => {
+                  return (
+                    <Chip
+                      key={e.toISOString()}
+                      label={e.toISOString()}
+                      color={selectedWorker === e ? "primary" : "default"}
+                      sx={{
+                        margin: "5px",
+                        padding: "0px 3px",
+                        "*": {
+                          fontSize: "14px",
+                        },
+                      }}
+                      onClick={() => {
+                        setSelectedDate(e);
+                      }}
+                    />
+                  );
+                })
+              )}
+            </div>
           </>
         )}
       </DialogContent>
