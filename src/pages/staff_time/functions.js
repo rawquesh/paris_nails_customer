@@ -24,3 +24,6 @@ export class PaymentStatus {
 export function getDateAsString(date) {
   return format(date, "Y/M/d");
 }
+export function getDateAsString2(date) {
+  return format(date, "d-M-Y");
+}

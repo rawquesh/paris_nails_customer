@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import {
   collection,
@@ -25,6 +25,12 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
   Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Paper,
   Skeleton,
@@ -36,12 +42,19 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { addDays, isAfter, isBefore, isDate } from "date-fns";
+import {
+  addDays,
+  addMinutes,
+  isAfter,
+  isBefore,
+  isDate,
+  isSameSecond,
+} from "date-fns";
 
 import styles from "./style.module.css";
-import { DatePicker, DesktopDatePicker } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import { randomInteger } from "../../utils/functions/math";
-import { getDateAsString, PaymentStatus } from "./functions";
+import { getDateAsString, getDateAsString2, PaymentStatus } from "./functions";
 
 export default function ChooseStaffTime() {
   const navigate = useNavigate();
@@ -50,7 +63,7 @@ export default function ChooseStaffTime() {
   const idsFromParam = queryParam.get("ids").split("|");
 
   const [services, setServices] = useState([]);
-  const [shopTimeLine, setShopTimeLine] = useState([]);
+  const [shopTimeLine, setShopTimeLine] = useState();
   const [offDays, setOffDays] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -58,6 +71,8 @@ export default function ChooseStaffTime() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datePickerError, setDatePickerError] = useState(null);
   const [isBookingsLoading, setIsBookingsLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [serviceForDialog, setServiceForDialog] = useState();
 
   useEffect(() => {
     fetchServices();
@@ -104,7 +119,7 @@ export default function ChooseStaffTime() {
     try {
       const snapshot = await getDocs(q);
       const _fetched = snapshot.docs.map(documentDataToObject);
-      console.log(_fetched);
+      setBookings(_fetched);
     } catch (error) {
       showToast({ type: "error", message: error.message });
     }
@@ -121,7 +136,7 @@ export default function ChooseStaffTime() {
     try {
       const snapshot = await getDocs(q);
       const _fetched = snapshot.docs.map(documentDataToObject)[0];
-      console.log(_fetched);
+      setShopTimeLine(_fetched);
     } catch (error) {
       showToast({ type: "error", message: error.message });
     }
@@ -133,7 +148,7 @@ export default function ChooseStaffTime() {
     try {
       const snapshot = await getDocs(q);
       const _fetched = snapshot.docs.map(documentDataToObject);
-      console.log(_fetched);
+      setWorkers(_fetched);
     } catch (error) {
       showToast({ type: "error", message: error.message });
     }
@@ -144,7 +159,7 @@ export default function ChooseStaffTime() {
     try {
       const snapshot = await getDoc(query);
       const _fetched = snapshot.data();
-      console.log(_fetched);
+      setOffDays(_fetched);
     } catch (error) {
       showToast({ type: "error", message: error.message });
     }
@@ -173,6 +188,26 @@ export default function ChooseStaffTime() {
     navigate(-1);
   }
   function handleNextButton() {}
+
+  function handleDialogOpen(_service) {
+    // serviceForDialog = _service;
+    setServiceForDialog(_service);
+    setDialogOpen(true);
+  }
+
+  function handleDialogClose() {
+    setDialogOpen(false);
+  }
+
+  function handleDialogSave() {
+    // setDialogOpen(false);
+  }
+
+  let canDialogOpen =
+    isBookingsLoading ||
+    shopTimeLine === undefined ||
+    workers.length === 0 ||
+    services.length === 0;
 
   // Components ======================================================================
 
@@ -230,7 +265,10 @@ export default function ChooseStaffTime() {
                       <Button
                         style={{ fontSize: "12px" }}
                         variant="outlined"
-                        disabled={isBookingsLoading}
+                        disabled={canDialogOpen}
+                        onClick={() => {
+                          handleDialogOpen(service);
+                        }}
                       >
                         Choose
                       </Button>
@@ -313,7 +351,7 @@ export default function ChooseStaffTime() {
         </div>
 
         <Divider variant="middle" />
-        <BuildTitle title="Choose staff and time" />
+        {/* <BuildTitle title="Choose staff and time" /> */}
         <ServicesSection />
         <Divider variant="middle" />
         <div className={styles.Button}>
@@ -327,8 +365,160 @@ export default function ChooseStaffTime() {
         <Divider variant="middle" />
       </div>
 
+      <MyDialog
+        key={serviceForDialog}
+        service={serviceForDialog}
+        bookings={bookings}
+        workers={workers}
+        shopTimeLine={shopTimeLine}
+        dialogOpen={dialogOpen}
+        handleDialogSave={handleDialogSave}
+        handleDialogClose={handleDialogClose}
+        selectedDate={selectedDate}
+        offDays={offDays}
+      />
+
       <Footer />
       <Bottom />
     </>
+  );
+}
+
+function MyDialog({
+  service,
+  workers,
+  shopTimeLine,
+  bookings,
+  date,
+  dialogOpen,
+  handleDialogSave,
+  handleDialogClose,
+  offDays,
+}) {
+  const [selectedWorker, setSelectedWorker] = useState();
+
+  const [selectedDates, setSelectedDates] = useState([]);
+
+  function getSortedWorkers() {
+    return workers;
+  }
+
+  function getSortedDates() {
+    let cD = date;
+    let _tl = shopTimeLine.dates.filter(
+      (e) => e.weekday === cD.getDay() + 1
+    )[0];
+    let cWorker = selectedWorker;
+    let o = _tl.opening.split(":");
+    let c = _tl.closing.split(":");
+    let wD = cWorker.workingTime.filter((e) => e.day === cD.getDay() + 1)[0];
+    let oldtimeList = [];
+    if (offDays.includes(cD.getDay() + 1)) return [];
+    let oT = new Date(
+      cD.getFullYear(),
+      cD.getMonth(),
+      cD.getDate(),
+      o[0],
+      o[1]
+    );
+    let cT = oT.setHours(o[0], o[1]);
+
+    while (isBefore(oT, cT)) {
+      oT = addMinutes(oT, 15);
+    }
+
+    let timeList = [];
+    let _now = new Date();
+
+    for (const time of oldtimeList) {
+      if (isAfter(time, _now)) {
+        if (wD !== null) {
+          let wF = MyDateTime.toAus(
+            cD.year,
+            cD.month,
+            cD.day,
+            wD.from.split(":")[0],
+            wD.from.split(":")[1]
+          );
+          let wT = MyDateTime.toAus(
+            cD.year,
+            cD.month,
+            cD.day,
+            wD.to.split(":")[0],
+            wD.to.split(":")[1],
+          );
+          if (
+            (isBefore(wF, time) || isSameSecond(wF, time)) &&
+            isAfter(wT, time)
+          ) {
+            timeList.add(time);
+          }
+        } else {
+          timeList.add(time);
+        }
+      }
+    }
+
+    
+
+  }
+
+  useLayoutEffect(() => {
+    setSelectedDates([]);
+    setSelectedWorker(undefined);
+  }, [service]);
+
+  // useEffect(() => {
+
+  // }, [service]);
+
+  return (
+    <Dialog
+      open={dialogOpen}
+      onClose={handleDialogClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      className={styles.dialog}
+    >
+      <DialogTitle id="alert-dialog-title">
+        {"Choose staff and date."}
+      </DialogTitle>
+      <DialogContent>
+        {service === undefined ? (
+          "something went wrong"
+        ) : (
+          <>
+            <div>
+              {getSortedWorkers().map((e) => {
+                return (
+                  <Chip
+                    key={e.id}
+                    label={e.name}
+                    color={selectedWorker === e ? "primary" : "default"}
+                    sx={{
+                      margin: "5px",
+                      padding: "0px 3px",
+                      "*": {
+                        fontSize: "14px",
+                      },
+                    }}
+                    onClick={() => {
+                      setSelectedWorker(e);
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <Divider />
+          </>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleDialogClose}>Close</Button>
+        <Button onClick={handleDialogSave} autoFocus>
+          Done
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

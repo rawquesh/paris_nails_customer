@@ -48,3 +48,7 @@
   font-weight: 500;
   padding: 10px;
 }
+
+.dialog * {
+  font-family: "Montserrat", sans-serif;
+}
