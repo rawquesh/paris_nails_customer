@@ -17,8 +17,6 @@ import { UserAuthContextProvider } from "./utils/context";
 import ProtectedRoute from "./utils/protected_route";
 import Account from "./pages/account/account";
 import ChooseStaffTime from "./pages/staff_time/view";
-import MaterialUIPickers from "./pages/date/date";
-// import LoggedInRoute from "./utils/logged_routes";
 
 function App() {
   return (
@@ -55,7 +53,6 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="date" element={<MaterialUIPickers />} />
             <Route path="*" element={<Navigate to='/' />} />
           </Routes>
         </Router>

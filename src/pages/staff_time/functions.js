@@ -31,10 +31,13 @@ export function getDateAsString2(date) {
 }
 
 export function formatToAus(date) {
+  let offset = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx").split("+")[1];
+  console.log(offset);
+
   let f = formatInTimeZone(
     date,
     "Australia/Melbourne",
-    "yyyy-MM-dd'T'HH:mm:ss.SSS'+05:30'"
+    `yyyy-MM-dd'T'HH:mm:ss.SSS'+${offset}'`
   );
   return new Date(f);
 }
