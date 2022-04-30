@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 
+import { formatInTimeZone } from "date-fns-tz";
+
 export class PaymentStatus {
   static pending = "pending";
   static approved = "approved";
@@ -26,4 +28,13 @@ export function getDateAsString(date) {
 }
 export function getDateAsString2(date) {
   return format(date, "d-M-Y");
+}
+
+export function formatToAus(date) {
+  let f = formatInTimeZone(
+    date,
+    "Australia/Melbourne",
+    "yyyy-MM-dd'T'HH:mm:ss.SSS'+05:30'"
+  );
+  return new Date(f);
 }
