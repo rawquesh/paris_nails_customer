@@ -25,6 +25,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
   Button,
   Divider,
+  Link,
   Skeleton,
   Table,
   TableBody,
@@ -34,13 +35,21 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { addDays, isAfter, isBefore, isDate } from "date-fns";
+import {
+  addDays,
+  format,
+  isAfter,
+  isBefore,
+  isDate,
+  isSameDay,
+} from "date-fns";
 
 import styles from "./style.module.css";
 import { DatePicker } from "@mui/x-date-pickers";
 import { randomInteger } from "../../utils/functions/math";
-import { getDateAsString, PaymentStatus } from "./functions";
+import { getDateAsString, getDateAsString2, PaymentStatus } from "./functions";
 import MyDateDialog from "./dialog";
+import { compact, findIndex, unset } from "lodash";
 
 export default function ChooseStaffTime() {
   const navigate = useNavigate();
@@ -156,6 +165,9 @@ export default function ChooseStaffTime() {
   function handleChange(newValue) {
     setSelectedDate(newValue);
     if (isDate(newValue)) {
+      if (isSameDay(selectedDate, newValue)) {
+        return;
+      }
       let now = new Date();
       let later = addDays(now, 16);
       let newDate = newValue;
@@ -163,6 +175,19 @@ export default function ChooseStaffTime() {
       newDate.setHours(23, 59, 59, 59);
 
       const validate = isAfter(newDate, now) && isBefore(newDate, later);
+
+      setServices((e) => {
+        let newArray = [];
+
+        for (const obj of e) {
+          let o = { ...obj };
+          unset(o, "selected_date");
+          unset(o, "selected_worker");
+          newArray.push(o);
+        }
+
+        return newArray;
+      });
 
       if (validate) {
         fetchBookings(newDate);
@@ -186,7 +211,20 @@ export default function ChooseStaffTime() {
   }
 
   function handleDialogSave(selectedDate, service) {
-    
+    setServices((prevState) => {
+      let state = [...prevState];
+      const i = findIndex(state, service);
+      if (i === -1) return showToast({ message: "something went wrong." });
+      let s = {
+        ...service,
+        selected_date: selectedDate.date,
+        selected_worker: selectedDate.worker,
+      };
+
+      state[i] = s;
+      return state;
+    });
+
     setDialogOpen(false);
   }
 
@@ -249,16 +287,41 @@ export default function ChooseStaffTime() {
                       {service.name}
                     </TableCell>
                     <TableCell align="right">
-                      <Button
-                        style={{ fontSize: "12px" }}
-                        variant="outlined"
-                        disabled={canDialogOpen}
-                        onClick={() => {
-                          handleDialogOpen(service);
-                        }}
-                      >
-                        Choose
-                      </Button>
+                      {!service?.selected_date ? (
+                        <Button
+                          style={{ fontSize: "12px" }}
+                          variant="outlined"
+                          disabled={canDialogOpen}
+                          onClick={() => {
+                            handleDialogOpen(service);
+                          }}
+                        >
+                          Choose
+                        </Button>
+                      ) : (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "nowrap",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <p>
+                            {format(service.selected_date, "HH:mm") +
+                              ` ${service.selected_worker.name}`}
+                          </p>
+                          <Link
+                            component="button"
+                            variant="body2"
+                            sx={{ pl: "5px" }}
+                            onClick={() => {
+                              handleDialogOpen(service);
+                            }}
+                          >
+                            {"edit"}
+                          </Link>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
@@ -364,6 +427,19 @@ export default function ChooseStaffTime() {
           handleDialogClose={handleDialogClose}
           date={selectedDate}
           offDays={offDays}
+          alreadyAdded={compact(
+            services.map((e) => {
+              if (!e?.selected_date || !e?.selected_worker?.id) {
+                return undefined;
+              }
+              return {
+                date: e?.selected_date,
+                worker_id: e?.selected_worker?.id,
+                service_id: e?.id,
+                duration: e?.duration,
+              };
+            })
+          )}
         />
       )}
 

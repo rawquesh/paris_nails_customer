@@ -34,14 +34,24 @@ export default function MyDateDialog({
   handleDialogSave,
   handleDialogClose,
   offDays,
+  alreadyAdded,
 }) {
   const [selectedWorker, setSelectedWorker] = useState();
 
   const [selectedDate, setSelectedDate] = useState();
 
   useEffect(() => {
-    setSelectedDate(undefined);
-    setSelectedWorker(undefined);
+    console.log(alreadyAdded);
+    if (service?.selected_date && service?.selected_worker) {
+      setSelectedWorker(service.selected_worker);
+      setSelectedDate({
+        worker: service.selected_worker,
+        date: service?.selected_date,
+      });
+    } else {
+      setSelectedDate(undefined);
+      setSelectedWorker(undefined);
+    }
   }, [service]);
 
   function getSortedWorkers() {
@@ -161,6 +171,28 @@ export default function MyDateDialog({
           pull(timeList, t);
         }
       }
+
+      for (const obj of alreadyAdded) {
+        if (obj.service_id !== service.id) {
+          const bS = obj.date;
+
+          const bE = addMinutes(bS, obj.duration);
+
+          const id = obj.worker_id;
+          const difference = differenceInMinutes(bS, t);
+
+          if (
+            (isBefore(bS, t) || isSameMinute(bS, t)) &&
+            isAfter(bE, t) &&
+            cWorker.id === id
+          ) {
+            pull(timeList, t);
+          }
+          if (difference < sDuration && difference > 0 && id === cWorker.id) {
+            pull(timeList, t);
+          }
+        }
+      }
     }
 
     return timeList;
@@ -220,7 +252,7 @@ export default function MyDateDialog({
                   }}
                 >
                   {selectedWorker === undefined
-                    ? "Select a staff."
+                    ? "Select any staff from above."
                     : "Nothing to show here"}
                 </div>
               ) : (
