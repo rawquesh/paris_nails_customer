@@ -41,7 +41,6 @@ export default function MyDateDialog({
   const [selectedDate, setSelectedDate] = useState();
 
   useEffect(() => {
-    console.log(alreadyAdded);
     if (service?.selected_date && service?.selected_worker) {
       setSelectedWorker(service.selected_worker);
       setSelectedDate({
@@ -53,10 +52,6 @@ export default function MyDateDialog({
       setSelectedWorker(undefined);
     }
   }, [service]);
-
-  function getSortedWorkers() {
-    return workers;
-  }
 
   function getSortedDates() {
     const cD = date;
@@ -199,6 +194,21 @@ export default function MyDateDialog({
   }
 
   const sortedDates = getSortedDates();
+
+  function getSortedWorkers() {
+    let _workers = [];
+
+    const weekday = parseInt(format(date, "i"));
+
+    for (const w of workers) {
+      const wD = w.working_time.filter((e) => e.day === weekday)[0];
+
+      if (wD) {
+        _workers.push(w);
+      }
+    }
+    return _workers;
+  }
 
   return (
     <Dialog

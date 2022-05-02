@@ -16,7 +16,7 @@ import GoogleButton from "react-google-button";
 import styles from "./style.module.css";
 import { googleSignIn, logIn } from "../../utils/auth";
 import { MyAlert } from "../../components/feedback";
-import { useUserAuth } from "../../utils/context";
+import { useUserAuth } from "../../utils/context/auth_context";
 
 export default function Login() {
   const { user } = useUserAuth();

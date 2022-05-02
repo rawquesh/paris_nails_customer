@@ -198,7 +198,19 @@ export default function ChooseStaffTime() {
   function handlePreviousButton() {
     navigate(-1);
   }
-  function handleNextButton() {}
+  function handleNextButton() {
+    const isValidate =
+      services.filter((e) => !e?.selected_date && !e?.selected_worker)
+        .length === 0;
+    if (!isValidate) {
+      return showToast({
+        type: "error",
+        message: "Please pick dates for selected services.",
+      });
+    }
+
+    navigate("/checkout", { state: { services: services } });
+  }
 
   function handleDialogOpen(_service) {
     // serviceForDialog = _service;

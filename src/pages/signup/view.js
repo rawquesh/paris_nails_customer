@@ -6,7 +6,7 @@ import styles from "./style.module.css";
 import { logIn, signUp, updateName } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
 import { MyAlert } from "../../components/feedback";
-import { useUserAuth } from "../../utils/context";
+import { useUserAuth } from "../../utils/context/auth_context";
 
 export default function SignUp() {
   const navigate = useNavigate();

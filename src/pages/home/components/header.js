@@ -1,7 +1,7 @@
 import { Button, Link, Typography } from "@mui/material";
 import React from "react";
 import { logOut } from "../../../utils/auth";
-import { useUserAuth } from "../../../utils/context";
+import { useUserAuth } from "../../../utils/context/auth_context";
 
 import "./css/header.css";
 
