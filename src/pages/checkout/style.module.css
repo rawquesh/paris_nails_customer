@@ -1,0 +1,150 @@
+.wrapper {
+  display: flex;
+  max-width: 1200px;
+  margin: auto;
+  margin-top: 10px;
+  padding: 10px;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  font-family: "Montserrat", sans-serif;
+}
+
+.main {
+  display: flex;
+  width: 60%;
+  margin-right: 10px;
+  /* width: 100%; */
+
+  /* flex-wrap: nowrap; */
+  flex-direction: column;
+}
+.main2 {
+  width: 40%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+.box {
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  padding: 15px 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+  width: 100%;
+}
+
+/* .main1 {
+  flex-grow: 1;
+  width: 100%;
+}
+.main2 {
+  flex-grow: 1;
+  width: 70%;
+} */
+
+.service {
+  display: flex;
+  align-items: center;
+}
+
+.schild {
+  width: 100%;
+}
+.schild:last-child {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}
+.schild:first-child {
+  font-weight: bold;
+}
+
+.schild p {
+  font-weight: bold;
+}
+/* .schild2 {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.schild2 p {
+  font-weight: bold;
+} */
+
+.Button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.box button {
+  height: 40px;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+.wrapper * {
+  font-size: 14px;
+}
+
+h3 {
+  font-size: 15px;
+}
+
+.heading {
+  font-size: 20px;
+  font-weight: 400;
+  color: #151515;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  padding-left: 5px;
+}
+.TextField {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.TextField .break {
+  width: 20px;
+}
+
+@media only screen and (max-width: 850px) {
+  .wrapper * {
+    font-size: 12.5px;
+  }
+  h3 {
+    font-size: 13px;
+  }
+
+  .box button {
+    font-size: 15px;
+  }
+
+  .wrapper {
+    flex-direction: column;
+  }
+  .main2 {
+    width: 100%;
+  }
+  .main {
+    width: 100%;
+  }
+
+  .schild:last-child {
+    width: auto;
+  }
+  .heading {
+    font-size: 16px;
+  }
+
+}
+@media only screen and (max-width: 550px) {
+
+  .TextField {
+    flex-direction: column;
+  }
+}

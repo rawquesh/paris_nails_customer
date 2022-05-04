@@ -17,7 +17,7 @@ import {
   documentDataToObject,
   getArrayOfIDs,
 } from "../../utils/functions/firestore";
-import { randomInteger } from "../../utils/functions/math";
+import { generateKey, randomInteger } from "../../utils/functions/math";
 import { showToast } from "../../utils/functions/toast";
 
 import Footer, { Bottom } from "../home/components/footer";
@@ -136,9 +136,7 @@ export default function Services() {
                 </div>
               </div>
             ))
-          : heights.map((e) => (
-              <Skeleton key={e + randomInteger(1, 1000)} height={e} />
-            ))}
+          : heights.map((e) => <Skeleton key={generateKey(e)} height={e} />)}
       </div>
     );
   }
@@ -199,9 +197,7 @@ export default function Services() {
                 label={<p>{e}</p>}
               />
             ))
-          : heights.map((e) => (
-              <Skeleton key={e + randomInteger(1, 1000)} height={e} />
-            ))}
+          : heights.map((e) => <Skeleton key={generateKey(e)} height={e} />)}
       </div>
     );
   }
