@@ -8,6 +8,7 @@ import styles from "./style.module.css";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useUserAuth } from "../../utils/context/auth_context";
+
 export default function Checkout() {
   const location = useLocation();
   const { user } = useUserAuth();
@@ -16,20 +17,32 @@ export default function Checkout() {
   const [phone, setPhone] = useState("");
 
   useEffect(() => {
-    console.log(location.state?.services);
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      setName(user?.displayName ?? "");
-      setPhone(`${user?.phoneNumber}`);
-    }
+    fetchUserData();
   }, [user]);
 
   const services = [...location.state.services];
 
   async function handleSubmit() {
     console.log(name, phone);
+  }
+
+  async function fetchUserData() {
+    if (user === "loading") return;
+    try {
+      const token = await user?.getIdToken(true);
+      const res = await fetch(
+        `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
+      );
+      if (res.status === 200) {
+        const user = await res.json();
+        if (user) {
+          setName(user.name);
+          setPhone(user.phone);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   if (!location.state?.services) {
