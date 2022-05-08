@@ -19,8 +19,8 @@ export function passwordReset(email) {
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
-export function updateName(user, first_name, last_name) {
-  return updateProfile(user, { displayName: first_name + " " + last_name });
+export function updateName(user, name) {
+  return updateProfile(user, { displayName: name });
 }
 
 export function logOut() {

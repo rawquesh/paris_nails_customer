@@ -98,9 +98,7 @@ export default function Services() {
         type: "warning",
       });
     }
-    navigate(
-      `/choose-staff-time?ids=${selectedServices.map(getArrayOfIDs).join("|")}`
-    );
+    navigate("/choose-staff-time", { state: { services: selectedServices } });
   }
 
   /// components

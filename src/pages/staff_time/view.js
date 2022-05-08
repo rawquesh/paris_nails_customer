@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import {
   collection,
@@ -11,7 +11,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Heading from "../../components/heading";
 import { db } from "../../utils/firebaseConfig";
 import { documentDataToObject } from "../../utils/functions/firestore";
@@ -26,7 +26,6 @@ import {
   Button,
   Divider,
   Link,
-  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -46,18 +45,15 @@ import {
 
 import styles from "./style.module.css";
 import { DatePicker } from "@mui/x-date-pickers";
-import { randomInteger } from "../../utils/functions/math";
-import { getDateAsString, getDateAsString2, PaymentStatus } from "./functions";
+import { getDateAsString, PaymentStatus } from "./functions";
 import MyDateDialog from "./dialog";
 import { compact, findIndex, unset } from "lodash";
 
 export default function ChooseStaffTime() {
   const navigate = useNavigate();
-  const queryParam = useQuery();
+  const location = useLocation();
 
-  const idsFromParam = queryParam.get("ids").split("|");
-
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState(location?.state?.services);
   const [shopTimeLine, setShopTimeLine] = useState();
   const [offDays, setOffDays] = useState([]);
   const [workers, setWorkers] = useState([]);
@@ -70,7 +66,6 @@ export default function ChooseStaffTime() {
   const [serviceForDialog, setServiceForDialog] = useState();
 
   useEffect(() => {
-    fetchServices();
     fetchShopTimeline();
     fetchBookings(selectedDate);
     fetchShopWorker();
@@ -80,25 +75,6 @@ export default function ChooseStaffTime() {
 
   // Fetch Requests =======================================================
 
-  async function fetchServices() {
-    if (idsFromParam.length > 10) {
-      navigate("/");
-      return;
-    }
-
-    const q = query(
-      collection(db, "services"),
-      where(documentId(), "in", idsFromParam)
-    );
-
-    try {
-      const snapshot = await getDocs(q);
-      const _fetched = snapshot.docs.map(documentDataToObject);
-      setServices(_fetched);
-    } catch (error) {
-      showToast({ type: "error", message: error.message });
-    }
-  }
   async function fetchBookings(date) {
     setIsBookingsLoading(true);
     const q = query(
@@ -248,12 +224,11 @@ export default function ChooseStaffTime() {
 
   // Components ======================================================================
 
-  function ServicesSection() {
-    const heights = [];
-    for (let index = 0; index < idsFromParam.length; index++) {
-      heights.push(randomInteger(30, 50));
-    }
+  if (!services) {
+    return <Navigate to="/services" />;
+  }
 
+  function ServicesSection() {
     return (
       <TableContainer>
         <Table sx={{ minWidth: 350 }} aria-label="simple table">
@@ -286,71 +261,56 @@ export default function ChooseStaffTime() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {services.length !== 0
-              ? services.map((service) => (
-                  <TableRow
-                    key={service.id}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      "*": { fontFamily: "Montserrat" },
-                    }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {service.name}
-                    </TableCell>
-                    <TableCell align="right">
-                      {!service?.selected_date ? (
-                        <Button
-                          style={{ fontSize: "12px" }}
-                          variant="outlined"
-                          disabled={canDialogOpen}
-                          onClick={() => {
-                            handleDialogOpen(service);
-                          }}
-                        >
-                          Choose
-                        </Button>
-                      ) : (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexWrap: "nowrap",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <p>
-                            {format(service.selected_date, "HH:mm") +
-                              ` ${service.selected_worker.name}`}
-                          </p>
-                          <Link
-                            component="button"
-                            variant="body2"
-                            sx={{ pl: "5px" }}
-                            onClick={() => {
-                              handleDialogOpen(service);
-                            }}
-                          >
-                            {"edit"}
-                          </Link>
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
-              : heights.map((e) => (
-                  <TableRow key={e + randomInteger(1, 1000)}>
-                    <TableCell>
-                      <Skeleton width={"100%"} height={e} />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton
-                        width={"100%"}
-                        key={e + randomInteger(1, 1000)}
-                        height={e}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+            {services.map((service) => (
+              <TableRow
+                key={service.id}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "*": { fontFamily: "Montserrat" },
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {service.name}
+                </TableCell>
+                <TableCell align="right">
+                  {!service?.selected_date ? (
+                    <Button
+                      style={{ fontSize: "12px" }}
+                      variant="outlined"
+                      disabled={canDialogOpen}
+                      onClick={() => {
+                        handleDialogOpen(service);
+                      }}
+                    >
+                      Choose
+                    </Button>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "nowrap",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <p>
+                        {format(service.selected_date, "HH:mm") +
+                          ` ${service.selected_worker.name}`}
+                      </p>
+                      <Link
+                        component="button"
+                        variant="body2"
+                        sx={{ pl: "5px" }}
+                        onClick={() => {
+                          handleDialogOpen(service);
+                        }}
+                      >
+                        {"edit"}
+                      </Link>
+                    </div>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

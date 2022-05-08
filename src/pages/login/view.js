@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import {
   Box,
@@ -17,19 +17,17 @@ import styles from "./style.module.css";
 import { googleSignIn, logIn } from "../../utils/auth";
 import { MyAlert } from "../../components/feedback";
 import { useUserAuth } from "../../utils/context/auth_context";
+import withQuery from "../../utils/functions/with_query";
 
 export default function Login() {
   const { user } = useUserAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    navigate('/')
-  }
-
   const [error, setError] = useState("");
-
+  const [logging, setLogging] = useState(false);
 
   async function handleSubmit(event) {
+    setLogging(true);
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
@@ -49,23 +47,60 @@ export default function Login() {
     }
 
     try {
-      await logIn(values.email, values.password);
-      navigate("/");
+      const cred = await logIn(values.email, values.password);
+      navigate("/account", { state: { user: cred.user } });
     } catch (error) {
       console.log(error.message);
-      setError(error.message);
+      setError(`${error.message}`);
     }
   }
 
   const handleGoogleSignIn = async (e) => {
+    setLogging(true);
     e.preventDefault();
     try {
-      await googleSignIn();
-      navigate("/");
+      const cred = await googleSignIn();
+      const user = cred.user;
+      console.log(user.toJSON());
+      const token = await user.getIdToken();
+      const res = await fetch(
+        `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
+      );
+      if (res.status === 204) {
+        setError("first time huh?, updating...");
+        let _phone;
+        if (user?.phoneNumber) {
+          _phone = "0" + user.phoneNumber.replace(/\D/g, "").slice(-9);
+        }
+        await fetch(
+          "https://australia-southeast1-possystem-db408.cloudfunctions.net/user" +
+            withQuery({
+              token: token,
+              name: user?.displayName.trim() ?? "unset",
+              gender: "unset",
+              email: user?.email ?? "unset",
+              phone: user?.phoneNumber ? _phone : "unset",
+            }),
+          {
+            method: "POST",
+          }
+        );
+      }
+      navigate("/account", { state: { user: user.toJSON() } });
     } catch (error) {
-      console.log(error.message);
+      if ("message" in error) {
+        console.log(error.message);
+        setError(`${error.message}`);
+      } else {
+        console.log(error);
+        setError(`${error}`);
+      }
     }
   };
+
+  if (user && !logging) {
+    return <Navigate to="/account" />;
+  }
 
   return (
     <div className={styles.main}>

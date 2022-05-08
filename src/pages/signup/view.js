@@ -1,55 +1,103 @@
 import React, { useState } from "react";
 
-import { Box, Button, Link, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Link,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 
 import styles from "./style.module.css";
 import { logIn, signUp, updateName } from "../../utils/auth";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { MyAlert } from "../../components/feedback";
 import { useUserAuth } from "../../utils/context/auth_context";
+import withQuery from "../../utils/functions/with_query";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const { user } = useUserAuth();
 
-  if (user) {
-    navigate("/");
-  }
-
   const [error, setError] = useState("");
+  const [gender, setGender] = useState("female");
+  const [logging, setLogging] = useState(false);
 
   async function handleSubmit(event) {
+    setLogging(true);
+    setError(undefined);
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
     const val = {
-      first_name: data.get("first_name"),
-      last_name: data.get("last_name"),
+      name: data.get("name"),
       email: data.get("email"),
+      phone: data.get("phone"),
       password: data.get("password"),
     };
 
     console.log(val);
 
     if (
-      val.first_name === "" ||
-      val.last_name === "" ||
+      val.name === "" ||
       val.email === "" ||
-      val.password === ""
+      val.password === "" ||
+      val.phone === ""
     ) {
       setError("Please fill the fields.");
       return;
     }
 
-    try {
-      await signUp(val.email, val.password);
-      const user = await logIn(val.email, val.password);
-      await updateName(user.user, val.first_name, val.last_name);
-      navigate("/");
-    } catch (error) {
-      console.log(error.message);
-      setError(error.message);
+    if (val.phone.match(/^[0-9]+$/) !== null) {
+      if (!val.phone.startsWith("0") && val.phone.length === 9) {
+        val.phone = "0" + val.phone;
+      } else if (val.phone.length !== 10) {
+        return setError("Invail phone number (e.g. 0987654321)");
+      }
+    } else {
+      return setError("Invail phone number (e.g. 0987654321)");
     }
+    try {
+      const user = await signUp(val.email, val.password);
+      const token = await user.user.getIdToken();
+      await Promise.all([
+        fetch(
+          "https://australia-southeast1-possystem-db408.cloudfunctions.net/user" +
+            withQuery({
+              token: token,
+              name: val.name,
+              gender: gender,
+              email: val.email,
+              phone: val.phone,
+            }),
+          {
+            method: "POST",
+          }
+        ),
+        logIn(val.email, val.password),
+        updateName(user.user, val.name),
+      ]);
+      navigate("/account", { state: { user: user.user.toJSON() } });
+    } catch (error) {
+      if ("message" in error) {
+        console.log(error.message);
+        setError(`${error.message}`);
+      } else {
+        console.log(error);
+        setError(`${error}`);
+      }
+    }
+  }
+
+  function handleGenderChange(_, newGender) {
+    if (newGender !== null) {
+      setGender(newGender);
+    }
+  }
+
+  if (user && !logging) {
+    return <Navigate to="/account" />;
   }
 
   return (
@@ -68,27 +116,43 @@ export default function SignUp() {
         />
       )}
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="name"
+          label="Name"
+          name="name"
+          autoComplete="name"
+          autoFocus
+        />
         <div className={styles.name}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="first_name"
-            label="First Name"
-            name="first_name"
-            autoComplete="given-name"
-            autoFocus
+            id="phone"
+            label="Phone"
+            name="phone"
+            autoComplete="phone"
           />
           <span className={styles.break} />
-          <TextField
-            margin="normal"
-            required
+
+          <ToggleButtonGroup
+            color="primary"
+            value={gender}
+            exclusive
+            sx={{
+              mt: "5px",
+              // height : "6px",
+              alignItems: "center",
+            }}
             fullWidth
-            id="last_name"
-            label="Last Name"
-            name="last_name"
-            autoComplete="family-name"
-          />
+            onChange={handleGenderChange}
+          >
+            <ToggleButton value="male">Male</ToggleButton>
+            <ToggleButton value="female">Female</ToggleButton>
+          </ToggleButtonGroup>
         </div>
         <TextField
           margin="normal"
