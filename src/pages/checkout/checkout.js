@@ -1,4 +1,12 @@
-import { Button, Divider, TextField } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import Heading from "../../components/heading";
@@ -7,45 +15,33 @@ import { NavBar } from "../home/components/header";
 import styles from "./style.module.css";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import { useUserAuth } from "../../utils/context/auth_context";
 
 export default function Checkout() {
   const location = useLocation();
-  const { user } = useUserAuth();
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const user = location.state?.user;
+
+  const [name, setName] = useState(user.name ?? "");
+  const [phone, setPhone] = useState(user.phone ?? "");
+  const [gender, setGender] = useState(user.gender ?? "");
+  const [email, setEmail] = useState(user.email ?? "");
+
+  const [sync, setSync] = useState(true);
+
+  const services = location.state?.services;
 
   useEffect(() => {
-    fetchUserData();
-  }, [user]);
-
-  const services = [...location.state.services];
+    console.log(user);
+  }, []);
 
   async function handleSubmit() {
-    console.log(name, phone);
+    console.log(name, phone, email, gender);
+  }
+  async function handleSync() {
+    console.log(name, phone, email, gender);
   }
 
-  async function fetchUserData() {
-    if (user === "loading") return;
-    try {
-      const token = await user?.getIdToken(true);
-      const res = await fetch(
-        `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
-      );
-      if (res.status === 200) {
-        const user = await res.json();
-        if (user) {
-          setName(user.name);
-          setPhone(user.phone);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  if (!location.state?.services) {
+  if (!services) {
     return <Navigate to="/" />;
   }
 
@@ -98,36 +94,95 @@ export default function Checkout() {
             ></div>
           </div>
           <div className={styles.heading}>Your info</div>
-          <div className={`${styles.box} ${styles.TextField}`}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              label="Name"
-              autoComplete="name"
-            />
+          <div className={`${styles.box}`}>
+            <div className={`${styles.TextField}`}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                label="Name"
+                autoComplete="name"
+              />
 
-            <span className={styles.break} />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              label="Phone (eg. 0987654321)"
-              autoComplete="phone"
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              <span className={styles.break} />
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                label="Phone (eg. 0987654321)"
+                autoComplete="phone"
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              />
+            </div>
+            <div className={`${styles.TextField}`}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                label="Email"
+                autoComplete="email"
+              />
+
+              <span className={styles.break} />
+              <ToggleButtonGroup
+                color="primary"
+                value={gender}
+                exclusive
+                sx={{
+                  mt: "5px",
+                  // height : "6px",
+                  alignItems: "center",
+                }}
+                fullWidth
+                onChange={(_, newGender) => {
+                  if (newGender !== null) {
+                    setGender(newGender);
+                  }
+                }}
+              >
+                <ToggleButton value="male">Male</ToggleButton>
+                <ToggleButton value="female">Female</ToggleButton>
+              </ToggleButtonGroup>
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <FormControlLabel
+                // className={styles.checkbox}
+                control={<Checkbox checked={true} />}
+                label="Sync with profile"
+              />
+            </div>
+          </div>
+
+          <div className={styles.heading}>Payment option</div>
+          <div className={styles.box}>
+            <FormControlLabel
+              className={styles.checkbox}
+              control={<Checkbox checked={true} />}
+              label="Pay at shop"
+            />
+            <FormControlLabel
+              className={styles.checkbox}
+              control={<Checkbox disabled />}
+              label="Stripe"
+            />
+            <FormControlLabel
+              className={styles.checkbox}
+              control={<Checkbox disabled />}
+              label="Paypal"
             />
           </div>
-          <div className={styles.heading}>Payment option</div>
-          <div className={styles.box}></div>
         </div>
         <div className={styles.main2}>
           <div className={styles.heading}>Summary</div>
           <div className={styles.box}>
-            {services.map((e, i) => (
+            {services.map((e) => (
               <div key={e.id}>
                 <div
                   style={{

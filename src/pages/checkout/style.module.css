@@ -86,8 +86,11 @@
   line-height: 1.2;
   font-weight: 500;
 }
-.wrapper * {
+.wrapper p,div {
   font-size: 14px;
+}
+.checkbox *{
+  margin-left: 5px;
 }
 
 h3 {
@@ -113,8 +116,8 @@ h3 {
 }
 
 @media only screen and (max-width: 850px) {
-  .wrapper * {
-    font-size: 12.5px;
+  .wrapper p,div {
+    font-size: 13.5px;
   }
   h3 {
     font-size: 13px;

@@ -48,16 +48,19 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { getDateAsString, PaymentStatus } from "./functions";
 import MyDateDialog from "./dialog";
 import { compact, findIndex, unset } from "lodash";
+import { useUserAuth } from "../../utils/context/auth_context";
 
 export default function ChooseStaffTime() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useUserAuth();
 
   const [services, setServices] = useState(location?.state?.services);
   const [shopTimeLine, setShopTimeLine] = useState();
   const [offDays, setOffDays] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [profile, setProfile] = useState();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datePickerError, setDatePickerError] = useState(null);
@@ -73,7 +76,27 @@ export default function ChooseStaffTime() {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    fetchUserData();
+  }, [user]);
+
   // Fetch Requests =======================================================
+
+  async function fetchUserData() {
+    if (user === "loading") return;
+    try {
+      const token = await user?.getIdToken(true);
+      const res = await fetch(
+        `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
+      );
+      if (res.status === 200) {
+        const user = await res.json();
+        setProfile(user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function fetchBookings(date) {
     setIsBookingsLoading(true);
@@ -184,8 +207,19 @@ export default function ChooseStaffTime() {
         message: "Please pick dates for selected services.",
       });
     }
+    let _user;
+    if (profile) {
+      _user = {};
+      Object.keys(profile).forEach((key) => {
+        if (profile[key] === "unset") {
+          _user[key] = "";
+        } else {
+          _user[key] = profile[key];
+        }
+      });
+    }
 
-    navigate("/checkout", { state: { services: services } });
+    navigate("/checkout", { state: { services: services, user: _user } });
   }
 
   function handleDialogOpen(_service) {
