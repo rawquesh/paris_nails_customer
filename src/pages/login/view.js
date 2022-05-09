@@ -98,7 +98,7 @@ export default function Login() {
     }
   };
 
-  if (user && !logging) {
+  if (user?.uid && !logging) {
     return <Navigate to="/account" />;
   }
 

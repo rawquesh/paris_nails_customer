@@ -90,8 +90,8 @@ export default function ChooseStaffTime() {
         `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
       );
       if (res.status === 200) {
-        const user = await res.json();
-        setProfile(user);
+        const _user = await res.json();
+        setProfile(_user);
       }
     } catch (error) {
       console.log(error);
@@ -109,7 +109,6 @@ export default function ChooseStaffTime() {
       ]),
       where("scheduled_date", "==", getDateAsString(date))
     );
-
     try {
       const snapshot = await getDocs(q);
       const _fetched = snapshot.docs.map(documentDataToObject);

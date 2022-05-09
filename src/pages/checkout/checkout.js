@@ -21,10 +21,10 @@ export default function Checkout() {
 
   const user = location.state?.user;
 
-  const [name, setName] = useState(user.name ?? "");
-  const [phone, setPhone] = useState(user.phone ?? "");
-  const [gender, setGender] = useState(user.gender ?? "");
-  const [email, setEmail] = useState(user.email ?? "");
+  const [name, setName] = useState(user?.name ?? "");
+  const [phone, setPhone] = useState(user?.phone ?? "");
+  const [gender, setGender] = useState(user?.gender ?? "");
+  const [email, setEmail] = useState(user?.email ?? "");
 
   const [sync, setSync] = useState(true);
 
@@ -35,15 +35,21 @@ export default function Checkout() {
   }, []);
 
   async function handleSubmit() {
+    if(name === ""|| phone === "")
+
+    if(sync){
+
+    }
+
     console.log(name, phone, email, gender);
+    return;
   }
-  async function handleSync() {
-    console.log(name, phone, email, gender);
-  }
+
 
   if (!services) {
     return <Navigate to="/" />;
   }
+
 
   return (
     <div>
@@ -137,7 +143,6 @@ export default function Checkout() {
                 exclusive
                 sx={{
                   mt: "5px",
-                  // height : "6px",
                   alignItems: "center",
                 }}
                 fullWidth
@@ -154,7 +159,7 @@ export default function Checkout() {
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <FormControlLabel
                 // className={styles.checkbox}
-                control={<Checkbox checked={true} />}
+                control={<Checkbox onChange={(e)=> setSync(e.target.checked) } checked={sync} />}
                 label="Sync with profile"
               />
             </div>
@@ -162,6 +167,8 @@ export default function Checkout() {
 
           <div className={styles.heading}>Payment option</div>
           <div className={styles.box}>
+            <div style={{display : "flex",flexDirection : "column"}}>
+
             <FormControlLabel
               className={styles.checkbox}
               control={<Checkbox checked={true} />}
@@ -170,13 +177,14 @@ export default function Checkout() {
             <FormControlLabel
               className={styles.checkbox}
               control={<Checkbox disabled />}
-              label="Stripe"
+              label="Stripe (Credit Card)"
             />
             <FormControlLabel
               className={styles.checkbox}
               control={<Checkbox disabled />}
               label="Paypal"
             />
+            </div>
           </div>
         </div>
         <div className={styles.main2}>

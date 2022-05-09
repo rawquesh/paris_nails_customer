@@ -96,7 +96,7 @@ export default function SignUp() {
     }
   }
 
-  if (user && !logging) {
+  if (user?.uid && !logging) {
     return <Navigate to="/account" />;
   }
 
