@@ -19,9 +19,6 @@ import { showToast } from "../../utils/functions/toast";
 import withQuery from "../../utils/functions/with_query";
 import { useUserAuth } from "../../utils/context/auth_context";
 
-import getRandomColor from "../../utils/functions/random_color";
-import { formatToAus, getDateAsString } from "../staff_time/functions";
-import { Timestamp } from "firebase/firestore";
 import { format } from "date-fns";
 
 export default function Checkout() {
@@ -69,27 +66,17 @@ export default function Checkout() {
       const token = await user?.getIdToken(true);
       const bookingsModel = services.map((e) => {
         return {
-          user_id: user.uid,
           name: name,
           phone: _phone,
-          color: getRandomColor(),
-          note: "",
           payment_method: "shop",
           status: "atShop",
-          transaction_id: "",
           service_id: e.id,
-          service_name: e.name,
-          service_url: "",
-          service_amount: e.price,
           assigner_id: e.selected_worker.id,
           assigner_name: e.selected_worker.name,
           scheduled_time: format(
             e.selected_date,
             "yyyy-MM-dd'T'HH:mm:ss.SSS+10:00"
           ),
-          duration: e.duration,
-          scheduled_date: getDateAsString(formatToAus(e.selected_date)),
-          requested: "",
         };
       });
       const promises = [
