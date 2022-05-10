@@ -8,48 +8,143 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import Heading from "../../components/heading";
 import Footer, { Bottom } from "../home/components/footer";
 import { NavBar } from "../home/components/header";
 import styles from "./style.module.css";
 import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { showToast } from "../../utils/functions/toast";
+import withQuery from "../../utils/functions/with_query";
+import { useUserAuth } from "../../utils/context/auth_context";
+
+import getRandomColor from "../../utils/functions/random_color";
+import { formatToAus, getDateAsString } from "../staff_time/functions";
+import { Timestamp } from "firebase/firestore";
+import { format } from "date-fns";
 
 export default function Checkout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useUserAuth();
 
-  const user = location.state?.user;
+  const userInfo = location.state?.user;
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [phone, setPhone] = useState(user?.phone ?? "");
-  const [gender, setGender] = useState(user?.gender ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
+  const [name, setName] = useState(userInfo?.name ?? "");
+  const [phone, setPhone] = useState(userInfo?.phone ?? "");
+  const [gender, setGender] = useState(userInfo?.gender ?? "");
+  const [email, setEmail] = useState(userInfo?.email ?? "");
 
   const [sync, setSync] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
 
-  const services = location.state?.services;
+  const services = [...location.state?.services];
 
   useEffect(() => {
-    console.log(user);
+    console.log(services);
   }, []);
 
   async function handleSubmit() {
-    if(name === ""|| phone === "")
-
-    if(sync){
-
+    setSubmitted(true);
+    if (user === "loading") {
+      return;
     }
 
-    console.log(name, phone, email, gender);
-    return;
+    if (name === "" || phone === "" || email === "" || gender === "") {
+      return showToast({ message: "Fill the available fields." });
+    }
+    let _phone = phone;
+
+    if (_phone.match(/^[0-9]+$/) !== null) {
+      if (!_phone.startsWith("0") && _phone.length === 9) {
+        _phone = "0" + _phone;
+      } else if (_phone.length !== 10) {
+        return showToast({ message: "Invail phone number (e.g. 0987654321)" });
+      }
+    } else {
+      return showToast({ message: "Invail phone number (e.g. 0987654321)" });
+    }
+
+    try {
+      const token = await user?.getIdToken(true);
+      const bookingsModel = services.map((e) => {
+        return {
+          user_id: user.uid,
+          name: name,
+          phone: _phone,
+          color: getRandomColor(),
+          note: "",
+          payment_method: "shop",
+          status: "atShop",
+          transaction_id: "",
+          service_id: e.id,
+          service_name: e.name,
+          service_url: "",
+          service_amount: e.price,
+          assigner_id: e.selected_worker.id,
+          assigner_name: e.selected_worker.name,
+          scheduled_time: format(
+            e.selected_date,
+            "yyyy-MM-dd'T'HH:mm:ss.SSS+10:00"
+          ),
+          duration: e.duration,
+          scheduled_date: getDateAsString(formatToAus(e.selected_date)),
+          requested: "",
+        };
+      });
+      const promises = [
+        fetch(
+          "https://australia-southeast1-possystem-db408.cloudfunctions.net/bookings",
+
+          {
+            method: "POST",
+            headers: {
+              headers: { "Content-type": "text/plain" },
+            },
+            body: JSON.stringify({
+              bookings: bookingsModel,
+              token: token,
+            }),
+          }
+        ),
+      ];
+
+      if (sync) {
+        promises.push(
+          fetch(
+            "https://australia-southeast1-possystem-db408.cloudfunctions.net/user" +
+              withQuery({
+                token: token,
+                name: name,
+                gender: gender,
+                email: email,
+                phone: _phone,
+              }),
+            {
+              method: "POST",
+            }
+          )
+        );
+      }
+
+      const res = await Promise.all(promises);
+      console.log(res[0].json());
+
+      navigate("/", { replace: true });
+    } catch (error) {
+      if ("message" in error) {
+        showToast({ message: `${error.message}` });
+      } else {
+        showToast({ message: `${error}` });
+      }
+      navigate("/", { replace: true });
+    }
   }
 
-
-  if (!services) {
+  if (!location.state?.services) {
     return <Navigate to="/" />;
   }
-
 
   return (
     <div>
@@ -110,6 +205,7 @@ export default function Checkout() {
                 onChange={(e) => setName(e.target.value)}
                 label="Name"
                 autoComplete="name"
+                name="name"
               />
 
               <span className={styles.break} />
@@ -123,6 +219,7 @@ export default function Checkout() {
                 label="Phone (eg. 0987654321)"
                 autoComplete="phone"
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                name="phone"
               />
             </div>
             <div className={`${styles.TextField}`}>
@@ -159,7 +256,12 @@ export default function Checkout() {
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <FormControlLabel
                 // className={styles.checkbox}
-                control={<Checkbox onChange={(e)=> setSync(e.target.checked) } checked={sync} />}
+                control={
+                  <Checkbox
+                    onChange={(e) => setSync(e.target.checked)}
+                    checked={sync}
+                  />
+                }
                 label="Sync with profile"
               />
             </div>
@@ -167,23 +269,22 @@ export default function Checkout() {
 
           <div className={styles.heading}>Payment option</div>
           <div className={styles.box}>
-            <div style={{display : "flex",flexDirection : "column"}}>
-
-            <FormControlLabel
-              className={styles.checkbox}
-              control={<Checkbox checked={true} />}
-              label="Pay at shop"
-            />
-            <FormControlLabel
-              className={styles.checkbox}
-              control={<Checkbox disabled />}
-              label="Stripe (Credit Card)"
-            />
-            <FormControlLabel
-              className={styles.checkbox}
-              control={<Checkbox disabled />}
-              label="Paypal"
-            />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <FormControlLabel
+                className={styles.checkbox}
+                control={<Checkbox checked={true} />}
+                label="Pay at shop"
+              />
+              <FormControlLabel
+                className={styles.checkbox}
+                control={<Checkbox disabled />}
+                label="Stripe (Credit Card)"
+              />
+              <FormControlLabel
+                className={styles.checkbox}
+                control={<Checkbox disabled />}
+                label="Paypal"
+              />
             </div>
           </div>
         </div>
@@ -230,7 +331,12 @@ export default function Checkout() {
               </div>
             </div>
             <br />
-            <Button fullWidth onClick={handleSubmit} variant="contained">
+            <Button
+              fullWidth
+              disabled={submitted}
+              onClick={handleSubmit}
+              variant="contained"
+            >
               {"Checkout"}
             </Button>
           </div>
