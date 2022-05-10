@@ -46,7 +46,6 @@ export default function Checkout() {
   }, []);
 
   async function handleSubmit() {
-    setSubmitted(true);
     if (user === "loading") {
       return;
     }
@@ -127,6 +126,7 @@ export default function Checkout() {
           )
         );
       }
+      setSubmitted(true);
 
       const res = await Promise.all(promises);
       console.log(res[0].json());
