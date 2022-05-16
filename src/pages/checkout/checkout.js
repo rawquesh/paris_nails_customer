@@ -1,6 +1,7 @@
 import {
   Button,
   Checkbox,
+  CircularProgress,
   Divider,
   FormControlLabel,
   TextField,
@@ -168,7 +169,7 @@ export default function Checkout() {
                     fontSize: "14px",
                   }}
                 >
-                  Ariana, 03:30PM, 02 June 2022
+                  {`${e.selected_worker?.name}, ${formatDate5(e.selected_date)}`}
                 </div>
                 {services.length - 1 !== i && <Divider />}
               </div>
@@ -324,7 +325,7 @@ export default function Checkout() {
               onClick={handleSubmit}
               variant="contained"
             >
-              {"Checkout"}
+              {submitted ? <CircularProgress size={30} /> : "Checkout"}
             </Button>
           </div>
         </div>
@@ -334,4 +335,10 @@ export default function Checkout() {
       <Bottom />
     </div>
   );
+}
+
+function formatDate5(date) {
+
+  return format(date, "HH:mm dd-LLL")
+
 }

@@ -73,16 +73,19 @@ export default function Login() {
           _phone = "0" + user.phoneNumber.replace(/\D/g, "").slice(-9);
         }
         await fetch(
-          "https://australia-southeast1-possystem-db408.cloudfunctions.net/user" +
-            withQuery({
-              token: token,
-              name: user?.displayName.trim() ?? "unset",
-              gender: "unset",
-              email: user?.email ?? "unset",
-              phone: user?.phoneNumber ? _phone : "unset",
-            }),
+          "https://australia-southeast1-possystem-db408.cloudfunctions.net/user",
           {
             method: "POST",
+            headers: {
+              headers: { "Content-type": "text/plain" },
+            },
+            body: JSON.stringify({
+              token: token,
+              name: user?.displayName.trim() ?? "",
+              gender: "",
+              email: user?.email ?? "",
+              phone: user?.phoneNumber ? _phone : "",
+            }),
           }
         );
       }

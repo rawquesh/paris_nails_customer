@@ -40,6 +40,15 @@ export default function ThemeConfig({ children }) {
             },
           },
         },
+        MuiTextField: {
+          styleOverrides: {
+            root: {
+              input: {
+                padding: "15px",
+              },
+            },
+          },
+        },
       },
     }),
     []

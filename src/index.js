@@ -26,40 +26,40 @@ function App() {
       <GlobalStyles />
       <UserAuthContextProvider>
         {/* <CheckoutContextProvider> */}
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="Services"
-                element={
-                  <ProtectedRoute>
-                    <Services />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="account"
-                element={
-                  <ProtectedRoute>
-                    <Account />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="choose-staff-time"
-                element={
-                  <ProtectedRoute>
-                    <ChooseStaffTime />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="login" element={<Login />} />
-              <Route path="signup" element={<SignUp />} />
-              <Route path="checkout" element={<Checkout />} />
-              <Route path="forgot-password" element={<ForgotPassword />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </Router>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="Services"
+              element={
+                <ProtectedRoute>
+                  <Services />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="choose-staff-time"
+              element={
+                <ProtectedRoute>
+                  <ChooseStaffTime />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Router>
         {/* </CheckoutContextProvider> */}
       </UserAuthContextProvider>
     </ThemeConfig>

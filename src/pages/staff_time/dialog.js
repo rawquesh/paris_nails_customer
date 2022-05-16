@@ -138,7 +138,6 @@ export default function MyDateDialog({
       ) {
         pull(timeList, t);
       }
-      // console.log(_lunch, _lunchEnd);
       if (difference < sDuration && difference > 0) {
         pull(timeList, t);
       }
@@ -200,11 +199,19 @@ export default function MyDateDialog({
 
     const weekday = parseInt(format(date, "i"));
 
+    if (offDays.includes(weekday)) return _workers;
+
     for (const w of workers) {
       const wD = w.working_time.filter((e) => e.day === weekday)[0];
 
       if (wD) {
-        _workers.push(w);
+        if (w.is_limited_services) {
+          if (w.selected_services.includes(service.id)) {
+            _workers.push(w);
+          }
+        } else {
+          _workers.push(w);
+        }
       }
     }
     return _workers;

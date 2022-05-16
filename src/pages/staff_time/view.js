@@ -206,19 +206,8 @@ export default function ChooseStaffTime() {
         message: "Please pick dates for selected services.",
       });
     }
-    let _user;
-    if (profile) {
-      _user = {};
-      Object.keys(profile).forEach((key) => {
-        if (profile[key] === "unset") {
-          _user[key] = "";
-        } else {
-          _user[key] = profile[key];
-        }
-      });
-    }
 
-    navigate("/checkout", { state: { services: services, user: _user } });
+    navigate("/checkout", { state: { services: services, user: profile } });
   }
 
   function handleDialogOpen(_service) {
