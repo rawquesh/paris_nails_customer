@@ -1,21 +1,20 @@
-import React, { useState } from "react";
-
 import {
   Box,
   Button,
   Link,
   TextField,
   ToggleButton,
-  ToggleButtonGroup,
+  ToggleButtonGroup
 } from "@mui/material";
-
-import styles from "./style.module.css";
-import { logIn, signUp, updateName } from "../../utils/auth";
+import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { MyAlert } from "../../components/feedback";
-import { useUserAuth } from "../../utils/context/auth_context";
-import withQuery from "../../utils/functions/with_query";
+import { logIn, signUp, updateName } from "../../utils/auth";
 import { FUNCTIONS_URL } from "../../utils/const";
+import { useUserAuth } from "../../utils/context/auth_context";
+import styles from "./style.module.css";
+
+
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -63,19 +62,18 @@ export default function SignUp() {
       const user = await signUp(val.email, val.password);
       const token = await user.user.getIdToken();
       await Promise.all([
-        fetch(
-          `${FUNCTIONS_URL}/user` +
-            withQuery({
-              token: token,
-              name: val.name,
-              gender: gender,
-              email: val.email,
-              phone: val.phone,
-            }),
-          {
-            method: "POST",
-          }
-        ),
+        fetch(`${FUNCTIONS_URL}/user?token=${token}`, {
+          method: "POST",
+          headers: {
+            headers: { "Content-type": "text/plain" },
+          },
+          body: JSON.stringify({
+            name: val.name,
+            gender: gender,
+            email: val.email,
+            phone: val.phone,
+          }),
+        }),
         logIn(val.email, val.password),
         updateName(user.user, val.name),
       ]);

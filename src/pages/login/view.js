@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-
 import {
   Box,
   Button,
@@ -9,16 +6,15 @@ import {
   Link,
   TextField,
 } from "@mui/material";
-
-import isEmail from "validator/es/lib/isEmail";
+import React, { useState } from "react";
 import GoogleButton from "react-google-button";
-
-import styles from "./style.module.css";
-import { googleSignIn, logIn } from "../../utils/auth";
+import { Navigate, useNavigate } from "react-router-dom";
+import isEmail from "validator/es/lib/isEmail";
 import { MyAlert } from "../../components/feedback";
-import { useUserAuth } from "../../utils/context/auth_context";
-import withQuery from "../../utils/functions/with_query";
+import { googleSignIn, logIn } from "../../utils/auth";
 import { FUNCTIONS_URL } from "../../utils/const";
+import { useUserAuth } from "../../utils/context/auth_context";
+import styles from "./style.module.css";
 
 export default function Login() {
   const { user } = useUserAuth();
@@ -64,31 +60,25 @@ export default function Login() {
       const user = cred.user;
       console.log(user.toJSON());
       const token = await user.getIdToken();
-      const res = await fetch(
-        `${FUNCTIONS_URL}/user?token=${token}`
-      );
+      const res = await fetch(`${FUNCTIONS_URL}/user?token=${token}`);
       if (res.status === 204) {
         setError("first time huh?, updating...");
         let _phone;
         if (user?.phoneNumber) {
           _phone = "0" + user.phoneNumber.replace(/\D/g, "").slice(-9);
         }
-        await fetch(
-          `${FUNCTIONS_URL}/user`,
-          {
-            method: "POST",
-            headers: {
-              headers: { "Content-type": "text/plain" },
-            },
-            body: JSON.stringify({
-              token: token,
-              name: user?.displayName.trim() ?? "",
-              gender: "",
-              email: user?.email ?? "",
-              phone: user?.phoneNumber ? _phone : "",
-            }),
-          }
-        );
+        await fetch(`${FUNCTIONS_URL}/user?token=${token}`, {
+          method: "POST",
+          headers: {
+            headers: { "Content-type": "text/plain" },
+          },
+          body: JSON.stringify({
+            name: user?.displayName.trim() ?? " ",
+            gender: " ",
+            email: user?.email ?? " ",
+            phone: user?.phoneNumber ? _phone : " ",
+          }),
+        });
       }
       navigate("/account", { state: { user: user.toJSON() } });
     } catch (error) {

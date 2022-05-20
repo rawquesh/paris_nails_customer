@@ -1,1 +1,2 @@
 export const FUNCTIONS_URL = "https://australia-southeast1-paris-nail-97b99.cloudfunctions.net";
+export const GOOGLE_MAP_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3154.229076268091!2d145.31169091582794!3d-37.7612265388129!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad631d60c2ce27d%3A0xa575855bb2f60914!2sParis%20Nails!5e0!3m2!1sen!2sin!4v1649144695992!5m2!1sen!2sin";

@@ -1,3 +1,5 @@
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import {
   Button,
   Checkbox,
@@ -6,22 +8,19 @@ import {
   FormControlLabel,
   TextField,
   ToggleButton,
-  ToggleButtonGroup,
+  ToggleButtonGroup
 } from "@mui/material";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { useLocation, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Heading from "../../components/heading";
+import { FUNCTIONS_URL } from "../../utils/const";
+import { useUserAuth } from "../../utils/context/auth_context";
+import { showToast } from "../../utils/functions/toast";
 import Footer, { Bottom } from "../home/components/footer";
 import { NavBar } from "../home/components/header";
 import styles from "./style.module.css";
-import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import { showToast } from "../../utils/functions/toast";
-import withQuery from "../../utils/functions/with_query";
-import { useUserAuth } from "../../utils/context/auth_context";
 
-import { format } from "date-fns";
-import { FUNCTIONS_URL } from "../../utils/const";
 
 export default function Checkout() {
   const location = useLocation();
@@ -100,19 +99,19 @@ export default function Checkout() {
 
       if (sync) {
         promises.push(
-          fetch(
-            `${FUNCTIONS_URL}/user` +
-              withQuery({
-                token: token,
-                name: name,
-                gender: gender,
-                email: email,
-                phone: _phone,
-              }),
-            {
-              method: "POST",
-            }
-          )
+          fetch(`${FUNCTIONS_URL}/user?token=${token}`, {
+            method: "POST",
+            headers: {
+              headers: { "Content-type": "text/plain" },
+            },
+            body: JSON.stringify({
+              token: token,
+              name: name,
+              gender: gender,
+              email: email,
+              phone: _phone,
+            }),
+          })
         );
       }
       setSubmitted(true);
@@ -170,7 +169,9 @@ export default function Checkout() {
                     fontSize: "14px",
                   }}
                 >
-                  {`${e.selected_worker?.name}, ${formatDate5(e.selected_date)}`}
+                  {`${e.selected_worker?.name}, ${formatDate5(
+                    e.selected_date
+                  )}`}
                 </div>
                 {services.length - 1 !== i && <Divider />}
               </div>
@@ -339,7 +340,5 @@ export default function Checkout() {
 }
 
 function formatDate5(date) {
-
-  return format(date, "HH:mm dd-LLL")
-
+  return format(date, "HH:mm dd-LLL");
 }

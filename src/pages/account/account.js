@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Skeleton,
   TextField,
   ToggleButton,
@@ -26,13 +25,11 @@ export default function Account() {
 
   const location = useLocation();
 
-  const [profile, setProfile] = useState({ ...location.state?.user });
-  const [isProfileFetching, setIsProfileFetching] = useState(false);
+  const [profile, setProfile] = useState({});
   const [isBookingsLoading, setIsBookingsLoading] = useState(true);
 
   const [bookings, setBookings] = useState([]);
 
-  // const initalProfile = { ...location.state?.user };
 
   useEffect(() => {
     fetchUserData();
@@ -55,20 +52,15 @@ export default function Account() {
     }
   }
 
-  async function fetchUserData(force = false) {
-    if (!location.state?.user) {
-      setIsProfileFetching(false);
-    }
-    if (user !== "loading" && (!location.state?.user || force)) {
+  async function fetchUserData(force = true) {
+
+    if (user !== "loading" && ( force)) {
       try {
         const token = await user.getIdToken();
 
-        const res = await fetch(
-          `${FUNCTIONS_URL}/user?token=${token}`
-        );
+        const res = await fetch(`${FUNCTIONS_URL}/user?token=${token}`);
         if (res.status === 200) {
           const _user = await res.json();
-          setIsProfileFetching(true);
           setProfile(_user);
           // initalProfile = _user;
         }
@@ -78,14 +70,14 @@ export default function Account() {
     }
   }
 
-  // async function signout() {
-  //   try {
-  //     await logOut();
-  //     navigate("/");
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }
+  async function signout() {
+    try {
+      await logOut();
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   function handleGenderChange(_, newGender) {
     if (newGender !== null) {
@@ -117,7 +109,6 @@ export default function Account() {
             margin="normal"
             required
             fullWidth
-            disabled={!isProfileFetching}
             id="name"
             label="Name"
             name="name"
@@ -130,7 +121,6 @@ export default function Account() {
               margin="normal"
               required
               fullWidth
-              disabled={!isProfileFetching}
               id="phone"
               label="Phone"
               name="phone"
@@ -141,7 +131,6 @@ export default function Account() {
 
             <ToggleButtonGroup
               color="primary"
-              disabled={!isProfileFetching}
               value={profile?.gender ?? ""}
               exclusive
               sx={{
@@ -159,7 +148,6 @@ export default function Account() {
           <TextField
             margin="normal"
             required
-            disabled={!isProfileFetching}
             fullWidth
             id="email"
             label="Email Address"
@@ -167,7 +155,9 @@ export default function Account() {
             autoComplete="email"
             value={profile?.email ?? ""}
           />
-          <Button fullWidth onClick={(e) => {}} variant="contained">
+          <Button fullWidth onClick={(e) => {
+            signout();
+          }} variant="contained">
             Save
           </Button>
         </div>

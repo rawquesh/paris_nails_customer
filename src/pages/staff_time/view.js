@@ -1,27 +1,3 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-
-import {
-  collection,
-  doc,
-  documentId,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import Heading from "../../components/heading";
-import { db } from "../../utils/firebaseConfig";
-import { documentDataToObject } from "../../utils/functions/firestore";
-import { showToast } from "../../utils/functions/toast";
-import useQuery from "../../utils/functions/use_query";
-import Footer, { Bottom } from "../home/components/footer";
-import { NavBar } from "../home/components/header";
-
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
   Button,
   Divider,
@@ -34,6 +10,9 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
   addDays,
   format,
@@ -42,14 +21,30 @@ import {
   isDate,
   isSameDay,
 } from "date-fns";
-
-import styles from "./style.module.css";
-import { DatePicker } from "@mui/x-date-pickers";
-import { getDateAsString, PaymentStatus } from "./functions";
-import MyDateDialog from "./dialog";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { compact, findIndex, unset } from "lodash";
-import { useUserAuth } from "../../utils/context/auth_context";
+import React, { useEffect, useState } from "react";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import Heading from "../../components/heading";
 import { FUNCTIONS_URL } from "../../utils/const";
+import { useUserAuth } from "../../utils/context/auth_context";
+import { db } from "../../utils/firebaseConfig";
+import { documentDataToObject } from "../../utils/functions/firestore";
+import { showToast } from "../../utils/functions/toast";
+import Footer, { Bottom } from "../home/components/footer";
+import { NavBar } from "../home/components/header";
+import MyDateDialog from "./dialog";
+import { getDateAsString, PaymentStatus } from "./functions";
+import styles from "./style.module.css";
 
 export default function ChooseStaffTime() {
   const navigate = useNavigate();
@@ -87,9 +82,7 @@ export default function ChooseStaffTime() {
     if (user === "loading") return;
     try {
       const token = await user?.getIdToken(true);
-      const res = await fetch(
-        `${FUNCTIONS_URL}/user?token=${token}`
-      );
+      const res = await fetch(`${FUNCTIONS_URL}/user?token=${token}`);
       if (res.status === 200) {
         const _user = await res.json();
         setProfile(_user);
