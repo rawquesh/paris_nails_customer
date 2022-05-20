@@ -18,6 +18,7 @@ import { googleSignIn, logIn } from "../../utils/auth";
 import { MyAlert } from "../../components/feedback";
 import { useUserAuth } from "../../utils/context/auth_context";
 import withQuery from "../../utils/functions/with_query";
+import { FUNCTIONS_URL } from "../../utils/const";
 
 export default function Login() {
   const { user } = useUserAuth();
@@ -64,7 +65,7 @@ export default function Login() {
       console.log(user.toJSON());
       const token = await user.getIdToken();
       const res = await fetch(
-        `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
+        `${FUNCTIONS_URL}/user?token=${token}`
       );
       if (res.status === 204) {
         setError("first time huh?, updating...");
@@ -73,7 +74,7 @@ export default function Login() {
           _phone = "0" + user.phoneNumber.replace(/\D/g, "").slice(-9);
         }
         await fetch(
-          "https://australia-southeast1-possystem-db408.cloudfunctions.net/user",
+          `${FUNCTIONS_URL}/user`,
           {
             method: "POST",
             headers: {

@@ -1,0 +1,1 @@
+export const FUNCTIONS_URL = "https://australia-southeast1-paris-nail-97b99.cloudfunctions.net";

@@ -49,6 +49,7 @@ import { getDateAsString, PaymentStatus } from "./functions";
 import MyDateDialog from "./dialog";
 import { compact, findIndex, unset } from "lodash";
 import { useUserAuth } from "../../utils/context/auth_context";
+import { FUNCTIONS_URL } from "../../utils/const";
 
 export default function ChooseStaffTime() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ export default function ChooseStaffTime() {
     try {
       const token = await user?.getIdToken(true);
       const res = await fetch(
-        `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
+        `${FUNCTIONS_URL}/user?token=${token}`
       );
       if (res.status === 200) {
         const _user = await res.json();

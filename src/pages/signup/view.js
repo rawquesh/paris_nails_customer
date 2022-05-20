@@ -15,6 +15,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { MyAlert } from "../../components/feedback";
 import { useUserAuth } from "../../utils/context/auth_context";
 import withQuery from "../../utils/functions/with_query";
+import { FUNCTIONS_URL } from "../../utils/const";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function SignUp() {
       const token = await user.user.getIdToken();
       await Promise.all([
         fetch(
-          "https://australia-southeast1-possystem-db408.cloudfunctions.net/user" +
+          `${FUNCTIONS_URL}/user` +
             withQuery({
               token: token,
               name: val.name,

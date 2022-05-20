@@ -1,12 +1,12 @@
 {
   "projects": {
-    "default": "possystem-db408"
+    "default": "paris-nail-97b99"
   },
   "targets": {
-    "possystem-db408": {
+    "paris-nail-97b99": {
       "hosting": {
-        "customer": [
-          "paris-nails-au"
+        "parisnails": [
+          "parisnails"
         ]
       }
     }

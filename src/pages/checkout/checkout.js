@@ -21,6 +21,7 @@ import withQuery from "../../utils/functions/with_query";
 import { useUserAuth } from "../../utils/context/auth_context";
 
 import { format } from "date-fns";
+import { FUNCTIONS_URL } from "../../utils/const";
 
 export default function Checkout() {
   const location = useLocation();
@@ -82,7 +83,7 @@ export default function Checkout() {
       });
       const promises = [
         fetch(
-          "https://australia-southeast1-possystem-db408.cloudfunctions.net/bookings",
+          `${FUNCTIONS_URL}/bookings`,
 
           {
             method: "POST",
@@ -100,7 +101,7 @@ export default function Checkout() {
       if (sync) {
         promises.push(
           fetch(
-            "https://australia-southeast1-possystem-db408.cloudfunctions.net/user" +
+            `${FUNCTIONS_URL}/user` +
               withQuery({
                 token: token,
                 name: name,

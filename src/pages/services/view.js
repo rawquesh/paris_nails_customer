@@ -6,20 +6,22 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import Heading from "../../components/heading";
 import { db } from "../../utils/firebaseConfig";
-
 import {
   documentDataToObject,
   getArrayOfIDs,
 } from "../../utils/functions/firestore";
 import { generateKey, randomInteger } from "../../utils/functions/math";
 import { showToast } from "../../utils/functions/toast";
-
 import Footer, { Bottom } from "../home/components/footer";
 import { NavBar } from "../home/components/header";
 import styles from "./css/style.module.css";

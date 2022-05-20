@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Heading from "../../components/heading";
 import { logOut } from "../../utils/auth";
+import { FUNCTIONS_URL } from "../../utils/const";
 import { useUserAuth } from "../../utils/context/auth_context";
 import { db } from "../../utils/firebaseConfig";
 import { documentDataToObject } from "../../utils/functions/firestore";
@@ -63,7 +64,7 @@ export default function Account() {
         const token = await user.getIdToken();
 
         const res = await fetch(
-          `https://australia-southeast1-possystem-db408.cloudfunctions.net/user?token=${token}`
+          `${FUNCTIONS_URL}/user?token=${token}`
         );
         if (res.status === 200) {
           const _user = await res.json();
