@@ -70,6 +70,8 @@ export default function Checkout() {
         return {
           name: name,
           phone: _phone,
+          email: email,
+          gender: gender,
           payment_method: "shop",
           status: "atShop",
           service_id: e.id,
