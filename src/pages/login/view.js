@@ -44,6 +44,7 @@ export default function Login() {
     }
 
     try {
+      setError("Processing, Please Wait...");
       const cred = await logIn(values.email, values.password);
       navigate("/account", { state: { user: cred.user } });
     } catch (error) {
@@ -104,7 +105,7 @@ export default function Login() {
       <h2>Login</h2>
       {error && (
         <MyAlert
-          type="error"
+          type={error?.includes("Processing") ? "info" : "error"}
           message={error}
           onClose={() => {
             setError("");

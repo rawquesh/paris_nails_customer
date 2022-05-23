@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { generate } from "shortid";
 
 export function randomInteger(min, max) {
@@ -7,3 +8,8 @@ export function randomInteger(min, max) {
 export function generateKey(pre) {
   return `${pre}_${generate()}`;
 }
+
+
+export function getDateAsString(date) {
+  return format(date, "Y/M/d");
+};

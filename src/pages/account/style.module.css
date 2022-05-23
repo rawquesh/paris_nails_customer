@@ -2,16 +2,17 @@
   max-width: 1200px;
   margin: auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   margin-top: 30px;
   padding: 0 10px;
-  align-items:  flex-start;
 }
 
 .inner {
   width: 100%;
-  flex-grow: 1;
+  max-width: 800px;
+  /* margin: 0%; */
+
 }
 .main .break {
   width: 20px;
@@ -37,13 +38,18 @@
   font-weight: 500;
 }
 .heading {
-  font-size: 20px;
+  /* background: var(--theme-color); */
+  text-align: center;
+  font-size: 18px;
   font-weight: 400;
-  color: #151515;
+  background-color: var(--theme-color3);
+  /* border-bottom: 2px solid rgb(126, 195, 255); */
+  width: 100%;
   font-family: "Montserrat", sans-serif;
   letter-spacing: 0.5px;
   font-weight: bold;
-  padding-left: 5px;
+  padding: 8px;
+  /* border-radius: 5px; */
 }
 
 @media only screen and (max-width: 450px) {

@@ -9,7 +9,7 @@
   justify-content: space-between;
   flex-flow: row;
   align-items: center;
-  background-color: #f7f2ef;
+  background-color: var(--theme-color3);
   padding: 5px 10px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 25px;
 }

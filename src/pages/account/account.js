@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Skeleton,
   TextField,
   ToggleButton,
@@ -23,13 +24,10 @@ export default function Account() {
   const navigate = useNavigate();
   const { user } = useUserAuth();
 
-  const location = useLocation();
-
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState();
   const [isBookingsLoading, setIsBookingsLoading] = useState(true);
 
   const [bookings, setBookings] = useState([]);
-
 
   useEffect(() => {
     fetchUserData();
@@ -53,8 +51,7 @@ export default function Account() {
   }
 
   async function fetchUserData(force = true) {
-
-    if (user !== "loading" && ( force)) {
+    if (user !== "loading" && force) {
       try {
         const token = await user.getIdToken();
 
@@ -62,7 +59,8 @@ export default function Account() {
         if (res.status === 200) {
           const _user = await res.json();
           setProfile(_user);
-          // initalProfile = _user;
+        } else {
+          setProfile({});
         }
       } catch (error) {
         console.log(error);
@@ -85,6 +83,44 @@ export default function Account() {
     }
   }
 
+  function handleProfileChange(params) {
+    setProfile((old) => ({ ...old, ...params }));
+  }
+
+  function handleProfileSubmit() {
+    if (user === "loading" || !profile) {
+      return;
+    }
+
+    if (
+      !profile.name ||
+      !profile.phone||
+      !profile.email ||
+      !profile.gender
+    ) {
+      return showToast({ message: "Fill the available fields." });
+    }
+    if (
+      profile.name === "" ||
+      profile.phone === "" ||
+      profile.email === "" ||
+      profile.gender === ""
+    ) {
+      return showToast({ message: "Fill the available fields." });
+    }
+    let _phone = profile.phone;
+
+    if (_phone.match(/^[0-9]+$/) !== null) {
+      if (!_phone.startsWith("0") && _phone.length === 9) {
+        _phone = "0" + _phone;
+      } else if (_phone.length !== 10) {
+        return showToast({ message: "Invail phone number (e.g. 0987654321)" });
+      }
+    } else {
+      return showToast({ message: "Invail phone number (e.g. 0987654321)" });
+    }
+  }
+
   function BookingsComponent() {
     if (bookings.length === 0) {
       return <div>{"no bookings were found. :("}</div>;
@@ -103,69 +139,86 @@ export default function Account() {
       <NavBar />
       <Heading title="Account" />
       <div className={styles.main}>
+        <div className={styles.heading}>Profile</div>
         <div className={styles.inner}>
-          <div className={styles.heading}>Profile</div>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="Name"
-            name="name"
-            autoComplete="name"
-            autoFocus
-            value={profile?.name ?? ""}
-          />
-          <div className={styles.name}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="phone"
-              label="Phone"
-              name="phone"
-              autoComplete="phone"
-              value={profile?.phone ?? ""}
-            />
-            <span className={styles.break} />
+          {!profile ? (
+            [0, 0, 0, 0].map(() => <Skeleton height={"50px"} />)
+          ) : (
+            <>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                autoFocus
+                onChange={(e) => handleProfileChange({ name: e.target.value })}
+                value={profile?.name ?? ""}
+              />
+              <div className={styles.name}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="phone"
+                  label="Phone"
+                  name="phone"
+                  autoComplete="phone"
+                  value={profile?.phone ?? ""}
+                  onChange={(e) =>
+                    handleProfileChange({ phone: e.target.value })
+                  }
+                />
+                <span className={styles.break} />
 
-            <ToggleButtonGroup
-              color="primary"
-              value={profile?.gender ?? ""}
-              exclusive
-              sx={{
-                mt: "5px",
-                // height : "6px",
-                alignItems: "center",
-              }}
-              fullWidth
-              onChange={handleGenderChange}
-            >
-              <ToggleButton value="male">Male</ToggleButton>
-              <ToggleButton value="female">Female</ToggleButton>
-            </ToggleButtonGroup>
-          </div>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            value={profile?.email ?? ""}
-          />
-          <Button fullWidth onClick={(e) => {
-            signout();
-          }} variant="contained">
-            Save
-          </Button>
+                <ToggleButtonGroup
+                  color="primary"
+                  value={profile?.gender ?? ""}
+                  exclusive
+                  sx={{
+                    mt: "5px",
+                    // height : "6px",
+                    alignItems: "center",
+                  }}
+                  fullWidth
+                  onChange={handleGenderChange}
+                >
+                  <ToggleButton value="male">Male</ToggleButton>
+                  <ToggleButton value="female">Female</ToggleButton>
+                </ToggleButtonGroup>
+              </div>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                onChange={(e) => handleProfileChange({ email: e.target.value })}
+                value={profile?.email ?? ""}
+              />
+              <Button
+                fullWidth
+                onClick={handleProfileSubmit}
+                variant="contained"
+              >
+                Save
+              </Button>
+            </>
+          )}
+
+          <Divider />
         </div>
 
         <span className={styles.break} />
+        <div className={styles.heading}>Bookings</div>
         <div className={styles.inner}>
-          <div className={styles.heading}>Bookings</div>
-          {isBookingsLoading ? <Skeleton /> : BookingsComponent()}
+          {isBookingsLoading
+            ? [0, 0, 0, 0].map(() => <Skeleton height={"40px"} />)
+            : BookingsComponent()}
         </div>
       </div>
       <Footer />

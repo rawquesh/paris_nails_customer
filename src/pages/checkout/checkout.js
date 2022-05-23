@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   TextField,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
 } from "@mui/material";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
@@ -16,11 +16,11 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Heading from "../../components/heading";
 import { FUNCTIONS_URL } from "../../utils/const";
 import { useUserAuth } from "../../utils/context/auth_context";
+import { getDateAsString } from "../../utils/functions/math";
 import { showToast } from "../../utils/functions/toast";
 import Footer, { Bottom } from "../home/components/footer";
 import { NavBar } from "../home/components/header";
 import styles from "./style.module.css";
-
 
 export default function Checkout() {
   const location = useLocation();
@@ -37,7 +37,7 @@ export default function Checkout() {
   const [sync, setSync] = useState(true);
   const [submitted, setSubmitted] = useState(false);
 
-  const services = [...location.state?.services];
+  const services = location.state?.services;
 
   useEffect(() => {
     console.log(services);
@@ -66,6 +66,7 @@ export default function Checkout() {
     try {
       const token = await user?.getIdToken(true);
       const bookingsModel = services.map((e) => {
+        const _d = format(e.selected_date, "yyyy-MM-dd'T'HH:mm:ss.SSS+10:00");
         return {
           name: name,
           phone: _phone,
@@ -74,10 +75,8 @@ export default function Checkout() {
           service_id: e.id,
           assigner_id: e.selected_worker.id,
           assigner_name: e.selected_worker.name,
-          scheduled_time: format(
-            e.selected_date,
-            "yyyy-MM-dd'T'HH:mm:ss.SSS+10:00"
-          ),
+          scheduled_date: getDateAsString(new Date(e.selected_date)),
+          scheduled_time: _d,
         };
       });
       const promises = [

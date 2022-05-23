@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 /// type : success, error, info.
 export function MyAlert({ type, message, onClose }) {
+  message = message.replace("Firebase: ", "")
   let color;
 
   switch (type) {

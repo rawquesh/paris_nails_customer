@@ -4,7 +4,7 @@ import {
   Link,
   TextField,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
 } from "@mui/material";
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -13,8 +13,6 @@ import { logIn, signUp, updateName } from "../../utils/auth";
 import { FUNCTIONS_URL } from "../../utils/const";
 import { useUserAuth } from "../../utils/context/auth_context";
 import styles from "./style.module.css";
-
-
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -58,7 +56,9 @@ export default function SignUp() {
     } else {
       return setError("Invail phone number (e.g. 0987654321)");
     }
+
     try {
+      setError("Processing, Please Wait...");
       const user = await signUp(val.email, val.password);
       const token = await user.user.getIdToken();
       await Promise.all([
@@ -107,7 +107,7 @@ export default function SignUp() {
       <h2>Sign Up</h2>
       {error && (
         <MyAlert
-          type="error"
+          type={error?.includes("Processing") ? "info" : "error"}
           message={error}
           onClose={() => {
             setError("");
