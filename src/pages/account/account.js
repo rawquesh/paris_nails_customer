@@ -26,6 +26,7 @@ export default function Account() {
 
   const [profile, setProfile] = useState();
   const [isBookingsLoading, setIsBookingsLoading] = useState(true);
+  const [emailWarning, setEmailWarning] = useState(false);
 
   const [bookings, setBookings] = useState([]);
 
@@ -84,6 +85,9 @@ export default function Account() {
   }
 
   function handleProfileChange(params) {
+    if (params.email && !emailWarning) {
+      setEmailWarning(true);
+    }
     setProfile((old) => ({ ...old, ...params }));
   }
 
@@ -92,12 +96,7 @@ export default function Account() {
       return;
     }
 
-    if (
-      !profile.name ||
-      !profile.phone||
-      !profile.email ||
-      !profile.gender
-    ) {
+    if (!profile.name || !profile.phone || !profile.email || !profile.gender) {
       return showToast({ message: "Fill the available fields." });
     }
     if (
@@ -123,7 +122,18 @@ export default function Account() {
 
   function BookingsComponent() {
     if (bookings.length === 0) {
-      return <div>{"no bookings were found. :("}</div>;
+      return (
+        <div
+          style={{
+            height: "100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {"No bookings were found."}
+        </div>
+      );
     }
     return (
       <div>
@@ -200,6 +210,8 @@ export default function Account() {
                 onChange={(e) => handleProfileChange({ email: e.target.value })}
                 value={profile?.email ?? ""}
               />
+              {/* <MyAlert /> */}
+              
               <Button
                 fullWidth
                 onClick={handleProfileSubmit}
@@ -221,6 +233,7 @@ export default function Account() {
             : BookingsComponent()}
         </div>
       </div>
+      <Divider />
       <Footer />
       <Bottom />
     </>
