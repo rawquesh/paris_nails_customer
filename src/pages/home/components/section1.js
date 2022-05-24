@@ -1,4 +1,5 @@
 import React from "react";
+import { SHOP_DESC2 } from "../../../utils/const";
 import "./css/section1.css";
 
 export default function Section1() {
@@ -17,9 +18,7 @@ export default function Section1() {
           top-notch customer service.
         </p>
         <p>
-          We use all-natural, organic body products, hard-to-find polish brands
-          and colors, iPads at every seat, and a drink menu featuring
-          fresh-pressed juices and hand-crafted coffees.
+        {SHOP_DESC2}
         </p>
         <br />
         <br />

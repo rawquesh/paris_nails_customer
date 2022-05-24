@@ -328,7 +328,7 @@ export default function Checkout() {
               onClick={handleSubmit}
               variant="contained"
             >
-              {submitted ? <CircularProgress size={30} /> : "Checkout"}
+              {submitted ? <CircularProgress size={30} /> : "Confirm Booking"}
             </Button>
           </div>
         </div>

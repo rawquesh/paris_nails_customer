@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import React from "react";
+import { SHOP_STAFF } from "../../../utils/const";
 import styles from "./css/members.module.css";
 
 export default function Members() {
@@ -29,7 +30,7 @@ export default function Members() {
         alignItems={"center"}
         justifyContent={"space-evenly"}
       >
-        {items.map((e) => (
+        {SHOP_STAFF.map((e) => (
           <Grid
             item
             justifyContent={"center"}
@@ -42,32 +43,11 @@ export default function Members() {
             <img src={e.image} alt={e.name} />
             <h4>{e.name}</h4>
             <p>{e.desc}</p>
-            <span className={styles.divider2 + " " + styles.divider}></span>
-            <p>{e.email}</p>
+            {/* <span className={styles.divider2 + " " + styles.divider}></span> */}
+            {/* <p>{e.email}</p> */}
           </Grid>
         ))}
       </Grid>
     </Grid>
   );
 }
-
-const items = [
-  {
-    image: "images/expert-1.jpg",
-    name: "Ann Nelson",
-    desc: "Founder, Senior Nail Technician",
-    email: "anna123@parisnails.com.au",
-  },
-  {
-    image: "images/expert-2.jpg",
-    name: "Mary Lucas",
-    desc: "Manicurist",
-    email: "mary123@parisnails.com.au",
-  },
-  {
-    image: "images/expert-3.jpg",
-    name: "Emily Lawrence",
-    desc: "Pedicurist",
-    email: "emily123@parisnails.com.au",
-  },
-];

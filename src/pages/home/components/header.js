@@ -1,6 +1,7 @@
 import { Button, Link, Typography } from "@mui/material";
 import React from "react";
 import { logOut } from "../../../utils/auth";
+import { SHOP_PHONE } from "../../../utils/const";
 import { useUserAuth } from "../../../utils/context/auth_context";
 
 import "./css/header.css";
@@ -109,7 +110,7 @@ export function NavBar() {
       </Link>
       <div className="header-item header-item-2">
         <MyButton2 title="Services" path="/services" />
-        <MyButton2 title="Contact Us" path="#contact" />
+        <MyButton2 title="Contact Us" path={`tel:${SHOP_PHONE}`} />
         {user ? (
           <MyButton title="Account" path="/account" />
         ) : (
