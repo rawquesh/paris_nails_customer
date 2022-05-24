@@ -25,7 +25,7 @@ export function MyAlert({ type, message, onClose }) {
 
   return (
     <Alert
-      style={{ padding: "0px 15px 0 15px", width: "100%", marginBottom: "2px" }}
+      style={{ padding: "0px 15px 0 15px", width: "100%", marginBottom: "5px" }}
       variant="outlined"
       severity={type}
       onClose={onClose}

@@ -57,6 +57,7 @@ export default function Login() {
     setLogging(true);
     e.preventDefault();
     try {
+      setError("Processing, Please Wait...");
       const cred = await googleSignIn();
       const user = cred.user;
       console.log(user.toJSON());

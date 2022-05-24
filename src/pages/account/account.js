@@ -1,14 +1,18 @@
 import {
   Button,
+  CircularProgress,
   Divider,
   Skeleton,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { format } from "date-fns";
+import { tr } from "date-fns/locale";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { MyAlert } from "../../components/feedback";
 import Heading from "../../components/heading";
 import { logOut } from "../../utils/auth";
 import { FUNCTIONS_URL } from "../../utils/const";
@@ -18,6 +22,7 @@ import { documentDataToObject } from "../../utils/functions/firestore";
 import { showToast } from "../../utils/functions/toast";
 import Footer, { Bottom } from "../home/components/footer";
 import { NavBar } from "../home/components/header";
+import { formatToAus, PaymentStatus } from "../staff_time/functions";
 import styles from "./style.module.css";
 
 export default function Account() {
@@ -27,6 +32,8 @@ export default function Account() {
   const [profile, setProfile] = useState();
   const [isBookingsLoading, setIsBookingsLoading] = useState(true);
   const [emailWarning, setEmailWarning] = useState(false);
+  const [showSave, setShowSave] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const [bookings, setBookings] = useState([]);
 
@@ -39,7 +46,8 @@ export default function Account() {
     if (user === "loading") return;
     const q = query(
       collection(db, "bookings"),
-      where("user_id", "==", user?.uid)
+      where("user_id", "==", user?.uid),
+      orderBy("date_created", "desc")
     );
     try {
       const snapshot = await getDocs(q);
@@ -79,19 +87,26 @@ export default function Account() {
   }
 
   function handleGenderChange(_, newGender) {
+    if (!showSave) {
+      setShowSave(true);
+    }
     if (newGender !== null) {
       setProfile((prev) => ({ ...prev, gender: newGender }));
     }
   }
 
   function handleProfileChange(params) {
+    if (!showSave) {
+      setShowSave(true);
+    }
     if (params.email && !emailWarning) {
+      console.log(true);
       setEmailWarning(true);
     }
     setProfile((old) => ({ ...old, ...params }));
   }
 
-  function handleProfileSubmit() {
+  async function handleProfileSubmit() {
     if (user === "loading" || !profile) {
       return;
     }
@@ -118,6 +133,27 @@ export default function Account() {
     } else {
       return showToast({ message: "Invail phone number (e.g. 0987654321)" });
     }
+
+    setSubmitted(true);
+
+    const token = await user?.getIdToken(true);
+
+    try {
+      await fetch(`${FUNCTIONS_URL}/user?token=${token}`, {
+        method: "POST",
+        headers: {
+          headers: { "Content-type": "text/plain" },
+        },
+        body: JSON.stringify({ ...profile, phone: _phone }),
+      });
+
+      setSubmitted(false);
+      setShowSave(false);
+      showToast({ type: "success", message: "Profile updated successfully." });
+    } catch (error) {
+      setSubmitted(false);
+      showToast({ type: "error", message: "Something went wrong." });
+    }
   }
 
   function BookingsComponent() {
@@ -135,11 +171,53 @@ export default function Account() {
         </div>
       );
     }
+    function formatter(date) {
+      return format(formatToAus(date), "dd MMM, hh:mm aaa");
+    }
+
+    function BField({ first, second }) {
+      return (
+        <p
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <p>{first}</p>
+          {second}
+        </p>
+      );
+    }
+
     return (
       <div>
         {bookings.map((e) => (
-          <div>{e.service_name}</div>
+          <div className={styles.bookingsub}>
+            <BField first="Booking ID" second={e.id} />
+            <BField
+              first="Date Created"
+              second={formatter(e.date_created.toDate())}
+            />
+            <Divider />
+            <span>Service details</span>
+            <BField first="Name" second={e.service_name} />
+            <BField first="Amount" second={e.service_amount + "$"} />
+            <BField first="Duration" second={e.duration + "min"} />
+            <BField first="Staff" second={e.assigner_name} />
+            <BField first="Status" second={PaymentStatus.getAsMsg(e.status)} />
+            <Divider />
+            <span>Your details</span>
+            <BField first="Name" second={e.name} />
+            <BField first="Phone" second={e.phone} />
+            <BField first="Email" second={e.email} />
+            <BField first="Gender" second={e.gender} />
+          </div>
         ))}
+        <MyAlert
+          type="info"
+          message="Please contact us if you want to make any changes.(Facebook/Call/Email)"
+        />
       </div>
     );
   }
@@ -210,14 +288,38 @@ export default function Account() {
                 onChange={(e) => handleProfileChange({ email: e.target.value })}
                 value={profile?.email ?? ""}
               />
-              {/* <MyAlert /> */}
-              
+              {emailWarning && (
+                <div style={{ marginBottom: "5px" }}>
+                  <MyAlert
+                    type="info"
+                    message="this email is for booking purpose, login email in not changeable."
+                    onClose={() => {
+                      setEmailWarning(false);
+                    }}
+                  />
+                </div>
+              )}
+
+              {showSave && (
+                <Button
+                  className={styles.btn}
+                  fullWidth
+                  onClick={handleProfileSubmit}
+                  disabled={submitted}
+                  variant="contained"
+                >
+                  {submitted ? <CircularProgress size={30} /> : "Save"}
+                </Button>
+              )}
               <Button
+                sx={{
+                  mt: "5px",
+                }}
                 fullWidth
-                onClick={handleProfileSubmit}
-                variant="contained"
+                onClick={signout}
+                variant="outlined"
               >
-                Save
+                {"Logout"}
               </Button>
             </>
           )}
